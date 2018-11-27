@@ -193,7 +193,7 @@ WOA09_NetCDF_filename(vv, gg, tt) = string("WOA09/NetCDFdata", "_", WOA_decade(v
 WOA09_NetCDF_filemame() = "https://data.nodc.noaa.gov/woa/WOA09/NetCDFdata/"
 
 https://data.nodc.noaa.gov/woa/WOA09/NetCDFdata/apparent_oxygen_utilization_annual_1deg.nc
-woa13_all_p00_01.nc
+https://data.nodc.noaa.gov/woa/WOA13/DATAv2/phosphate/netcdf/all/1.00/woa13_all_p00_01.nc
 
 function WOA_NetCDF_URL(vv, tt, ff, gg, yy)
     return string("https://data.nodc.noaa.gov/woa/",

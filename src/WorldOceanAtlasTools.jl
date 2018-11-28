@@ -1,8 +1,8 @@
 module WorldOceanAtlasTools
 
-using DataDeps, NetCDF, Match
+using DataDeps, NetCDF, Match, Interpolations
 
-include("WOA_.jl")
+include("WOA13.jl")
 
 # Test with `ncinfo(datadep"WOA13/woa13_all_p00_01.nc")`
 

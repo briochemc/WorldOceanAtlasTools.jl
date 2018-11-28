@@ -1,8 +1,13 @@
-function register_WOA13(vv, tt, ff, gg)
+"""
+    register_WOA13(vv, tt, gg)
+
+Registers a `datadep` for the variable `vv` averaged over `tt` at resolution `gg`.
+"""
+function register_WOA13(vv, tt, gg)
     register(DataDep(
         "WOA13",
         string(cite_WOD13(), "\n\n", cite_WOA13(vv)),
-        url_WOA13(vv, tt, ff, gg),
+        url_WOA13(vv, tt, gg),
         sha2_256
     ))
     return nothing
@@ -133,7 +138,8 @@ WOA13_averaging_period(tt) = @match my_averaging_period(tt) begin
     "December"  => "12"
 end
 
-
+# ff currently unused.
+# It is used when readong the ncfile though.
 incorrect_field_type_code(ff) = """
 "$ff" is an incorrect "field type code".
 The "field type code" must be must be one of these:
@@ -142,7 +148,7 @@ The "field type code" must be must be one of these:
 You need to edit the `my_function` function to add more!
 """
 my_field_type_code(ff) = @match ff begin
-    "an" || "mean" || "Mean"                         => "mean"
+    "an" || "mean" || "Mean" || "mn"                 => "mean" # unsure about "mn"
     "sd" || "std"  || "STD"  || "Standard deviation" => "STD"
     _ => error(incorrect_varfunc(ff))
 end
@@ -191,7 +197,7 @@ function WOA13_NetCDF_filename(vv, tt, gg)
 end
 
 """
-    WOA13_URL(vv, tt, ff, gg)
+    WOA13_URL(vv, tt, gg)
 
 Returns the URL (`String`) for the NetCDF file of the World Ocean Atlas.
 This URL `String` typically looks like
@@ -199,7 +205,7 @@ This URL `String` typically looks like
     "https://data.nodc.noaa.gov/woa/WOA13/DATAv2/phosphate/netcdf/all/1.00/woa13_all_p00_01.nc"
     ```
 """
-function url_WOA13(vv, tt, ff, gg)
+function url_WOA13(vv, tt, gg)
     return string("https://data.nodc.noaa.gov/woa/WOA13/DATAv2/",
                   WOA13_path_varname(vv), "/netcdf/",
                   WOA13_decade(vv), "/",

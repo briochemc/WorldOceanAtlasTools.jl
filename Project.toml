@@ -1,6 +1,10 @@
-authors = ["Benoit Pasquier <pasquieb@uci.edu>"]
 name = "WorldOceanAtlasTools"
 uuid = "04f20302-f1b9-11e8-29d9-7d841cb0a64a"
+authors = ["Benoit Pasquier <pasquieb@uci.edu>"]
 version = "0.1.0"
 
 [deps]
+DataDeps = "124859b0-ceae-595e-8997-d05f6a7a8dfe"
+Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
+Match = "7eb4fadd-790c-5f42-8a69-bfa0b872bfbf"
+NetCDF = "30363a11-5582-574a-97bb-aa9a979735b9"

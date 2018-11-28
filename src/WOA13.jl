@@ -213,4 +213,4 @@ function url_WOA13(vv, tt, gg)
                   WOA13_NetCDF_filename(vv, tt, gg))
 end
 
-
+export WOA13_NetCDF_filename, register_WOA13, cite_WOA13, WOA13_filename_varname

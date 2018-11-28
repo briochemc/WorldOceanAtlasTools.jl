@@ -1,15 +1,25 @@
-function interpolate(grd, nc_file)
+
+WOA13_varname(vv, ff) = string(WOA13_filename_varname(vv), "_", ff)
+
+function WOA13_interpolate(grd, vv, tt, gg, ff)
+    nc_file = @datadep_str string("WOA13/", WOA13_NetCDF_filename(vv, tt, gg))
     woa_lon = ncread(nc_file, "lon")
     woa_lat = ncread(nc_file, "lat")
     woa_depth = ncread(nc_file, "depth")
-    woa_var_3d = ncread(nc_file,string(vv, "_", ff))
+    woa_var_3d = ncread(nc_file, WOA13_varname(vv, ff))[:, :, :, 1] # could be "an" instead of "mn"
     # Reorder the variable index order (lat <-> lon from WOA to OCIM)
     woa_var_3d = permutedims(woa_var_3d, [2 1 3])
     # Rearrange longitude range (WOA data is -180:180 and OCIM is 0:360)
-    woa_lon, lon_reordering = sort(mod(woa_lon, 360))
-    woa_var_3d .= woa_var_3d[:, xt_reordering, :] ;
-    
+    woa_lon = sort(mod.(woa_lon, 360))
+    lon_reordering = sortperm(mod.(woa_lon, 360))
+    woa_var_3d .= woa_var_3d[:, lon_reordering, :]
+
+    itp = interpolate((woa_lat, woa_lon, woa_depth), woa_var_3d, Gridded(Linear()))
 end
+
+
+
+
 
 
 

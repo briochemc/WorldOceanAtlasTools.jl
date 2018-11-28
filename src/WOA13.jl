@@ -182,7 +182,7 @@ WOA13_v2(vv) = @match my_varname(vv) begin
     _ => error(incorrect_varname(vv))
 end
 
-function WOA13_NetCDF_filename(vv, gg, tt)
+function WOA13_NetCDF_filename(vv, tt, gg)
     return string("woa13_", WOA13_decade(vv), "_",
                   WOA13_filename_varname(vv),
                   WOA13_averaging_period(tt), "_",
@@ -204,7 +204,7 @@ function url_WOA13(vv, tt, ff, gg)
                   WOA13_path_varname(vv), "/netcdf/",
                   WOA13_decade(vv), "/",
                   WOA13_path_resolution(gg), "/",
-                  WOA13_NetCDF_filename(vv, gg, tt))
+                  WOA13_NetCDF_filename(vv, tt, gg))
 end
 
 

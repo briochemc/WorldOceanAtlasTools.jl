@@ -15,11 +15,12 @@ function WOA13_interpolate(grd, vv, tt, gg, ff)
     woa_var_3d .= woa_var_3d[:, lon_reordering, :]
 
     itp = interpolate((woa_lat, woa_lon, woa_depth), woa_var_3d, Gridded(Linear()))
+    return [itp(x, y, z) for x in grd["xt"], y in grd["yt"], z in grd["ztdepth"]
 end
 
 
 
-
+export WOA13_interpolate
 
 
 

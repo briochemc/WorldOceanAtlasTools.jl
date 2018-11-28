@@ -1,3 +1,7 @@
+# This file "resolves" the variable names used by the World Ocean Database (WOD).
+# The idea is that the WOD has a naming convention (plus some exceptions)
+# that are taken care of by the code below.
+
 """
     register_WOA13(vv, tt, gg)
 

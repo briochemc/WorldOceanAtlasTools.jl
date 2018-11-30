@@ -74,7 +74,8 @@ uuid = "83e8ac13-25f8-5344-8a64-a9f2b223428f"
 version = "0.5.0"
 
 [[Inpaintings]]
-git-tree-sha1 = "f23953dfda268ba6fe1e67363d8c6b15e96c91b0"
+deps = ["LinearAlgebra", "SparseArrays", "SuiteSparse"]
+git-tree-sha1 = "865d2ac6c4ea9756cf27f0b6db6e717dccaf8a30"
 repo-rev = "master"
 repo-url = "https://github.com/briochemc/Inpaintings.jl.git"
 uuid = "e44e3972-f375-11e8-12a4-bbfab0a641fe"
@@ -130,9 +131,9 @@ uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
 [[NetCDF]]
 deps = ["BinDeps", "CondaBinDeps", "Formatting", "Libdl", "Random", "Test"]
-git-tree-sha1 = "f88da71d28e99f1eb1e4836fd48ad0c13e966803"
+git-tree-sha1 = "0cf8e9276c5c426e43dad43863a4e86d6ce62c17"
 uuid = "30363a11-5582-574a-97bb-aa9a979735b9"
-version = "0.7.1"
+version = "0.7.2"
 
 [[OffsetArrays]]
 deps = ["DelimitedFiles", "Test"]
@@ -194,6 +195,10 @@ version = "0.10.0"
 [[Statistics]]
 deps = ["LinearAlgebra", "SparseArrays"]
 uuid = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
+
+[[SuiteSparse]]
+deps = ["Libdl", "LinearAlgebra", "SparseArrays"]
+uuid = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
 
 [[Test]]
 deps = ["Distributed", "InteractiveUtils", "Logging", "Random"]

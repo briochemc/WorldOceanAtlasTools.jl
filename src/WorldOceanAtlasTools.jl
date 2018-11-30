@@ -3,6 +3,7 @@ module WorldOceanAtlasTools
 using DataDeps, NetCDF, Match, Interpolations
 
 include("WOA13_names.jl")
+include("WOA13_interpolations.jl")
 
 # Test with `ncinfo(datadep"WOA13/woa13_all_p00_01.nc")`
 

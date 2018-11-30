@@ -2,6 +2,7 @@
 WOA13_varname(vv, ff) = string(WOA13_filename_varname(vv), "_", ff)
 
 function WOA13_interpolate(grd, vv, tt, gg, ff)
+    register_WOA13(vv, tt, gg)
     nc_file = @datadep_str string("WOA13/", WOA13_NetCDF_filename(vv, tt, gg))
     woa_lon = ncread(nc_file, "lon")
     woa_lat = ncread(nc_file, "lat")
@@ -15,7 +16,7 @@ function WOA13_interpolate(grd, vv, tt, gg, ff)
     woa_var_3d .= woa_var_3d[:, lon_reordering, :]
 
     itp = interpolate((woa_lat, woa_lon, woa_depth), woa_var_3d, Gridded(Linear()))
-    return [itp(x, y, z) for x in grd["xt"], y in grd["yt"], z in grd["ztdepth"]
+    return [itp(x, y, z) for x in grd["xt"], y in grd["yt"], z in grd["zt"]]
 end
 
 
@@ -47,6 +48,13 @@ woa_var_3d = permute(woa_var_3d,[2 1 3]) ;
 woa_var_3d(:,:,:) = woa_var_3d(:,xt_reordering,:) ;
 % Mesh of WOA's grid
 [woa_X,woa_Y,woa_Z] = meshgrid(woa_xt,woa_yt,woa_zt) ;
+
+`for i=1:talk_count
+    nn(j(1):j(2),:)=nan_list(:,2:3) + ...
+        repmat(talks_to(i,:),nan_count,1)
+    j=j+nan_count
+end
+
 
 %%----------------------------------------------------------------%%
 %%                 Interpolate to the OCIM grid                   %%

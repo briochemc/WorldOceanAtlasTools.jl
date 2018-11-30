@@ -14,6 +14,11 @@ function WOA13_interpolate(grd, vv, tt, gg, ff)
     woa_lon = sort(mod.(woa_lon, 360))
     lon_reordering = sortperm(mod.(woa_lon, 360))
     woa_var_3d .= woa_var_3d[:, lon_reordering, :]
+    # Inpaint the NaNs
+    woa_var_3d(findall(woad_var_3d < 0))
+    for z in eachindex(woa_depth)
+        woa_var_3d[:,:,z] .= inpaint_nans(woa_var_3d[:,:,z])
+    end
 
     itp = interpolate((woa_lat, woa_lon, woa_depth), woa_var_3d, Gridded(Linear()))
     return [itp(x, y, z) for x in grd["xt"], y in grd["yt"], z in grd["zt"]]

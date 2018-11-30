@@ -73,6 +73,13 @@ git-tree-sha1 = "098e4d2c533924c921f9f9847274f2ad89e018b8"
 uuid = "83e8ac13-25f8-5344-8a64-a9f2b223428f"
 version = "0.5.0"
 
+[[Inpaintings]]
+git-tree-sha1 = "f23953dfda268ba6fe1e67363d8c6b15e96c91b0"
+repo-rev = "master"
+repo-url = "https://github.com/briochemc/Inpaintings.jl.git"
+uuid = "e44e3972-f375-11e8-12a4-bbfab0a641fe"
+version = "0.1.0"
+
 [[InteractiveUtils]]
 deps = ["LinearAlgebra", "Markdown"]
 uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"

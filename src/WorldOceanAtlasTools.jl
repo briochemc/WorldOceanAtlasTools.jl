@@ -1,6 +1,6 @@
 module WorldOceanAtlasTools
 
-using DataDeps, NetCDF, Match, Interpolations
+using DataDeps, NetCDF, Match, Interpolations, Inpaintings
 
 include("WOA13_names.jl")
 include("WOA13_interpolations.jl")

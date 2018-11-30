@@ -5,6 +5,7 @@ version = "0.1.0"
 
 [deps]
 DataDeps = "124859b0-ceae-595e-8997-d05f6a7a8dfe"
+Inpaintings = "e44e3972-f375-11e8-12a4-bbfab0a641fe"
 Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
 Match = "7eb4fadd-790c-5f42-8a69-bfa0b872bfbf"
 NetCDF = "30363a11-5582-574a-97bb-aa9a979735b9"

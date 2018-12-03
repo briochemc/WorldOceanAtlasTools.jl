@@ -15,7 +15,8 @@ function WOA13_interpolate(grd, vv, tt, gg, ff)
     lon_reordering = sortperm(mod.(woa_lon, 360))
     woa_var_3d .= woa_var_3d[:, lon_reordering, :]
     # Inpaint the NaNs
-    woa_var_3d(findall(woad_var_3d < 0))
+    fillvalue = ncgetatt(nc_file, WOA13_varname(vv, ff), "_FillValue")
+    woa_var_3d[findall(woa_var_3d .== fillvalue)] .= NaN
     for z in eachindex(woa_depth)
         woa_var_3d[:,:,z] .= inpaint_nans(woa_var_3d[:,:,z])
     end

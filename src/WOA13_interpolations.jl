@@ -18,11 +18,11 @@ function WOA13_interpolate(grd, vv, tt, gg, ff)
     fillvalue = ncgetatt(nc_file, WOA13_varname(vv, ff), "_FillValue")
     woa_var_3d[findall(woa_var_3d .== fillvalue)] .= NaN
     for z in eachindex(woa_depth)
-        woa_var_3d[:,:,z] .= inpaint_nans(woa_var_3d[:,:,z])
+        woa_var_3d[:,:,z] .= inpaint(woa_var_3d[:,:,z], 1, [2])
     end
-
+    # Interpolate
     itp = interpolate((woa_lat, woa_lon, woa_depth), woa_var_3d, Gridded(Linear()))
-    return [itp(x, y, z) for x in grd["xt"], y in grd["yt"], z in grd["zt"]]
+    return [itp(y, x, z) for y in vec(grd["yt"]), x in vec(grd["xt"]), z in vec(grd["zt"])]
 end
 
 

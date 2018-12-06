@@ -18,7 +18,7 @@ function WOA13_interpolate(grd, vv, tt, gg, ff)
     fillvalue = ncgetatt(nc_file, WOA13_varname(vv, ff), "_FillValue")
     woa_var_3d[findall(woa_var_3d .== fillvalue)] .= NaN
     for z in eachindex(woa_depth)
-        woa_var_3d[:,:,z] .= inpaint(woa_var_3d[:,:,z], 1, [2])
+        woa_var_3d[:,:,z] .= inpaint(woa_var_3d[:,:,z], [2])
     end
     # Interpolate
     itp = interpolate((woa_lat, woa_lon, woa_depth), woa_var_3d, Gridded(Linear()))
@@ -27,7 +27,7 @@ end
 
 
 
-export WOA13_interpolate
+export WOA13_interpolate, WOA13_varname
 
 
 
@@ -55,11 +55,6 @@ woa_var_3d(:,:,:) = woa_var_3d(:,xt_reordering,:) ;
 % Mesh of WOA's grid
 [woa_X,woa_Y,woa_Z] = meshgrid(woa_xt,woa_yt,woa_zt) ;
 
-`for i=1:talk_count
-    nn(j(1):j(2),:)=nan_list(:,2:3) + ...
-        repmat(talks_to(i,:),nan_count,1)
-    j=j+nan_count
-end
 
 
 %%----------------------------------------------------------------%%

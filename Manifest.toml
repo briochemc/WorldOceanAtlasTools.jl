@@ -74,8 +74,8 @@ uuid = "83e8ac13-25f8-5344-8a64-a9f2b223428f"
 version = "0.5.0"
 
 [[Inpaintings]]
-deps = ["LinearAlgebra", "Match", "SparseArrays", "SuiteSparse"]
-git-tree-sha1 = "d917934d6dc50cfb9d32c59a54e498fad2a720ea"
+deps = ["LinearAlgebra", "Match", "SparseArrays", "SuiteSparse", "Test"]
+git-tree-sha1 = "c1fa24ef0cf99dad5b76824aafd79020ed15e8c8"
 repo-rev = "master"
 repo-url = "https://github.com/briochemc/Inpaintings.jl.git"
 uuid = "e44e3972-f375-11e8-12a4-bbfab0a641fe"

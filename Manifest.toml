@@ -75,7 +75,7 @@ version = "0.5.0"
 
 [[Inpaintings]]
 deps = ["LinearAlgebra", "Match", "SparseArrays", "SuiteSparse", "Test"]
-git-tree-sha1 = "c1fa24ef0cf99dad5b76824aafd79020ed15e8c8"
+git-tree-sha1 = "592dd15313abc5ced4c3a08e68215bbaef2bafb8"
 repo-rev = "master"
 repo-url = "https://github.com/briochemc/Inpaintings.jl.git"
 uuid = "e44e3972-f375-11e8-12a4-bbfab0a641fe"
@@ -120,7 +120,7 @@ git-tree-sha1 = "8d8253da9e8d38d642cec03d41786a5201479210"
 repo-rev = "union-deprecated"
 repo-url = "https://github.com/epatters/Match.jl.git"
 uuid = "7eb4fadd-790c-5f42-8a69-bfa0b872bfbf"
-version = "1.0.1+"
+version = "1.0.2+"
 
 [[MbedTLS]]
 deps = ["BinaryProvider", "Dates", "Libdl", "Random", "Sockets", "Test"]
@@ -139,9 +139,9 @@ version = "0.7.2"
 
 [[OffsetArrays]]
 deps = ["DelimitedFiles", "Test"]
-git-tree-sha1 = "f446248f2dfbc13039a0b90994dd25b059b01eab"
+git-tree-sha1 = "7d1442cb06fbfbc4fea936c3c56b38daffd22d3b"
 uuid = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
-version = "0.9.0"
+version = "0.9.1"
 
 [[Pkg]]
 deps = ["Dates", "LibGit2", "Markdown", "Printf", "REPL", "Random", "SHA", "UUIDs"]

@@ -53,6 +53,7 @@ function WOA13_bin_to_grid(grd, vv, tt, gg, ff)
     var3d = zeros(length(grd["yt"]), length(grd["xt"]), length(grd["zt"]))
     count3d = copy(var3d)
     for i in eachindex(CI)
+        @show i
         x = bin_index(woa_lon_col[i], elon)
         y = bin_index(woa_lat_col[i], elat)
         z = bin_index(woa_depth_col[i], edepth)
@@ -100,7 +101,7 @@ lat_edges(grd) = vcat(vec(grd["yt"] .- 0.5grd["dyt"]), last(vec(grd["yt"] .+ 0.5
 lon_edges(grd) = vcat(vec(grd["xt"] .- 0.5grd["dxt"]), last(vec(grd["xt"] .+ 0.5grd["dxt"])))
 depth_edges(grd) = vcat(0, cumsum(vec(grd["dzt"])))
 grid_edges(grd) = lat_edges(grd), lon_edges(grd), depth_edges(grd)
-bin_index(x, edges) = findfirst(edges .> x) - 1
+bin_index(x, edges) = all(edges .≤ x) ? length(edges) - 1 : findfirst(edges .> x) - 1
 
 
 

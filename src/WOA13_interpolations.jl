@@ -53,7 +53,6 @@ function WOA13_bin_to_grid(grd, vv, tt, gg, ff)
     var3d = zeros(length(grd["yt"]), length(grd["xt"]), length(grd["zt"]))
     count3d = copy(var3d)
     for i in eachindex(CI)
-        @show i
         x = bin_index(woa_lon_col[i], elon)
         y = bin_index(woa_lat_col[i], elat)
         z = bin_index(woa_depth_col[i], edepth)
@@ -64,7 +63,7 @@ function WOA13_bin_to_grid(grd, vv, tt, gg, ff)
     @. var3d = var3d / count3d
     # inpaint the NaNs
     for z in eachindex(vec(grd["zt"]))
-        var3d[:,:,z] .= inpaint(var3d[:,:,z], cycledims=[2])
+        any(isnan.(var3d[:,:,z])) ? var3d[:,:,z] .= inpaint(var3d[:,:,z], cycledims=[2]) : nothing
     end
 
     return var3d

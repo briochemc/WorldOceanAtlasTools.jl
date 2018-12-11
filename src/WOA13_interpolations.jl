@@ -1,5 +1,5 @@
 
-WOA13_varname(vv, ff) = string(WOA13_filename_varname(vv), "_", ff)
+WOA13_varname(vv, ff) = string(WOA13_filename_varname(vv), "_", my_field_type_code(ff))
 
 function WOA13_interpolate_to_grid(grd, vv, tt, gg, ff)
     register_WOA13(vv, tt, gg)
@@ -104,4 +104,4 @@ bin_index(x, edges) = findfirst(edges .> x) - 1
 
 
 
-export WOA13_interpolate, WOA13_varname
+export WOA13_interpolate, WOA13_varname, WOA13_bin_to_grid

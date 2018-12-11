@@ -151,8 +151,8 @@ The "field type code" must be must be one of these:
 You need to edit the `my_function` function to add more!
 """
 my_field_type_code(ff) = @match ff begin
-    "an" || "mean" || "Mean" || "mn"                 => "mean" # unsure about "mn"
-    "sd" || "std"  || "STD"  || "Standard deviation" => "STD"
+    "an" || "mean" || "Mean" || "mn"                 => "an" # unsure about "mn"
+    "sd" || "std"  || "STD"  || "Standard deviation" => "sd"
     _ => error(incorrect_varfunc(ff))
 end
 

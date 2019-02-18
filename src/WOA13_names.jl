@@ -2,6 +2,15 @@
 # The idea is that the WOD has a naming convention (plus some exceptions)
 # that are taken care of by the code below.
 
+# Fallback for using direct download
+function fallback_download(remotepath, localdir)
+    @assert(isdir(localdir))
+    filename = basename(remotepath)  # only works for URLs with filename as last part of name
+    localpath = joinpath(localdir, filename)
+    Base.download(remotepath, localpath)
+    return localpath
+end
+
 """
     register_WOA13(vv, tt, gg)
 
@@ -12,7 +21,8 @@ function register_WOA13(vv, tt, gg)
         "WOA13",
         string(cite_WOD13(), "\n\n", cite_WOA13(vv)),
         url_WOA13(vv, tt, gg),
-        sha2_256
+        sha2_256,
+        fetch_method = fallback_download
     ))
     return nothing
 end

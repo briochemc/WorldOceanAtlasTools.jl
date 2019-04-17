@@ -156,13 +156,16 @@ end
 incorrect_field_type_code(ff) = """
 "$ff" is an incorrect "field type code".
 The "field type code" must be must be one of these:
-    - "an" for the statistical mean
-    - "sd" for the the standard deviation
+    - "an" for the objectively analyzed climatology
+    - "mn" for the statistical mean
+    - "sd" for the standard deviation
 You need to edit the `my_function` function to add more!
 """
-my_field_type_code(ff) = @match ff begin
-    "an" || "mean" || "Mean" || "mn"                 => "an" # unsure about "mn"
-    "sd" || "std"  || "STD"  || "Standard deviation" => "sd"
+my_field_type_code(ff) = @match lowercase(ff) begin
+    "an" || "objectively analyzed climatology"  => "an"
+    "mn" || "mean" || "statistical mean"        => "mn"
+    "sd" || "std"  || "standard deviation"      => "sd"
+    "dd" || "number of observations"            => "dd"
     _ => error(incorrect_varfunc(ff))
 end
 

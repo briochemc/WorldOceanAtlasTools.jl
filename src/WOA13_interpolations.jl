@@ -25,7 +25,8 @@ function WOA13_mean_and_variance_per_grid_box(grd, vv, tt, gg)
     woa_lon = ncread(nc_file, "lon")
     woa_lat = ncread(nc_file, "lat")
     woa_depth = ncread(nc_file, "depth")
-    woa_μ_3d = ncread(nc_file, WOA13_varname(vv, "an"))[:, :, :, 1] # Annual mean of obs
+    ff = "an"
+    woa_μ_3d = ncread(nc_file, WOA13_varname(vv, ff))[:, :, :, 1] # Annual mean of obs
     # Reorder the variable index order (lat <-> lon from WOA to OCIM)
     println("  Rearranging data")
     woa_μ_3d = permutedims(woa_μ_3d, [2 1 3])
@@ -36,7 +37,7 @@ function WOA13_mean_and_variance_per_grid_box(grd, vv, tt, gg)
     woa_μ_3d .= woa_μ_3d[:, lon_reordering, :]
     # Find where there is data for both mean and std
     println("  Filtering data")
-    μfillvalue = ncgetatt(nc_file, WOA13_varname(vv, "mn"), "_FillValue")
+    μfillvalue = ncgetatt(nc_file, WOA13_varname(vv, ff), "_FillValue")
     CI = findall((woa_μ_3d .≠ μfillvalue) .& (woa_μ_3d .≠ 0)) # filter out fill-values and 0's
     woa_μ_col = woa_μ_3d[CI]
     woa_lat_col = woa_lat[map(x -> x.I[1], CI)]
@@ -68,6 +69,11 @@ function WOA13_mean_and_variance_per_grid_box(grd, vv, tt, gg)
     println("  Setting a realistic minimum for σ²")
     μ = mean(μ_3d, weights(n_woa_3d))
     σ²_3d .= max.(σ²_3d, 1e-4μ^2)
+    # Convert to SI units
+    μ_WOAunit = ncgetatt(nc_file, WOA13_varname(vv, ff), "units")
+    μ_unit = convert_WOAunits_to_unitful(μ_WOAunit)
+    μ_3d .*= ustrip(upreferred(1.0μ_unit))
+    σ²_3d .*= ustrip(upreferred(1.0μ_unit^2))
     return μ_3d, σ²_3d
 end
 

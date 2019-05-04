@@ -5,6 +5,7 @@ using DataDeps, NetCDF, Match, Memoize, StatsBase, Unitful
 include("WOA13_names.jl")
 include("WOA13_interpolations.jl")
 include("WOA_units_to_Unitful.jl")
+include("WOA13_arrays.jl")
 
 #=====================================
     TODO list?

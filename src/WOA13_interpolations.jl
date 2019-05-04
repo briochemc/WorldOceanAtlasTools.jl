@@ -20,7 +20,7 @@ for that given box is:
 function WOA13_mean_and_variance_per_grid_box(grd, vv, tt, gg)
     println("Averaging WOA 13 data into your grid")
     register_WOA13(vv, tt, gg)
-    nc_file = @datadep_str string("WOA13/", WOA13_NetCDF_filename(vv, tt, gg))
+    nc_file = @datadep_str string("WOA13_", my_varname(vv), "/", WOA13_NetCDF_filename(vv, tt, gg))
     println("  Reading NetCDF file")
     woa_lon = ncread(nc_file, "lon")
     woa_lat = ncread(nc_file, "lat")

@@ -18,7 +18,7 @@ Registers a `datadep` for the variable `vv` averaged over `tt` at resolution `gg
 """
 function register_WOA13(vv, tt, gg)
     register(DataDep(
-        "WOA13",
+        string("WOA13_", my_varname(vv)),
         string(cite_WOD13(), "\n\n", cite_WOA13(vv)),
         url_WOA13(vv, tt, gg),
         sha2_256,

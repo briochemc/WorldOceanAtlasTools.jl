@@ -1,8 +1,8 @@
 # World Ocean Atlas Tools
 
 <p>
-  <a href="https://doi.org/10.5281/zenodo.2667835">
-    <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.2667835.svg" alt="DOI">
+  <a href="https://doi.org/<DOI_NUMBER>">
+    <img src="https://zenodo.org/badge/DOI/<DOI_NUMBER>.svg" alt="DOI">
   </a>
   <a href="https://briochemc.github.io/WorldOceanAtlasTools.jl/stable/">
     <img src=https://img.shields.io/badge/docs-stable-blue.svg>
@@ -16,7 +16,7 @@
     <img alt="Build Status" src="https://travis-ci.com/briochemc/WorldOceanAtlasTools.jl.svg?branch=master">
   </a>
   <a href="https://ci.appveyor.com/project/briochemc/WorldOceanAtlasTools-jl">
-    <img alt="Build Status" src="https://ci.appveyor.com/api/projects/status/prm2xfd6q5pba1om?svg=true">
+    <img alt="Build Status" src="https://ci.appveyor.com/api/projects/status/76lcl30w1uxbirx2?svg=true">
   </a>
 </p>
 <p>

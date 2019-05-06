@@ -12,40 +12,46 @@ function fallback_download(remotepath, localdir)
 end
 
 """
-    register_WOA13(vv, tt, gg)
+    register_WOA(year, vv, tt, gg)
 
 Registers a `datadep` for the variable `vv` averaged over `tt` at resolution `gg`.
 """
-function register_WOA13(vv, tt, gg)
+function register_WOA(year, vv, tt, gg)
     register(DataDep(
-        string("WOA13_", my_varname(vv)),
-        string(cite_WOD13(), "\n\n", cite_WOA13(vv)),
-        url_WOA13(vv, tt, gg),
+        my_DataDeps_name(year, vv, tt, gg),
+        string(cite_WOD(year), "\n\n", cite_WOA(year, vv)),
+        url_WOA(year, vv, tt, gg),
         sha2_256,
         fetch_method = fallback_download
     ))
     return nothing
 end
 
-cite_WOA13(vv) = @match my_varname(vv) begin
-    "DSi" || "DIP" || "DIN" => cite_WOA13_Nutrients()
-    "Temp" => cite_WOA13_Temperature()
-    "Salt" => cite_WOA13_Salinity()
-    "O2" || "O2sat" || "AOU" => cite_WOA13_Oxygen()
-    "Dens" || "Cond" => cite_WOD13()
-    _ => error("Not sure what you are trying to cite.")
+#============================================================
+DataDeps registering name
+============================================================#
+my_DataDeps_name(year, vv, tt, gg) = string(
+    "WOA",
+    my_year(year), "_",
+    my_averaging_period(tt), "_",
+    WOA_path_varname(vv), "_",
+    surface_grid_size(gg)
+)
+
+#============================================================
+WOA year of the data product
+============================================================#
+my_year(year) = @match year begin
+    2005 || 05 || "2005" || "05" => "05"
+    2009 || 09 || "2009" || "09" => "09"
+    2013 || 13 || "2013" || "13" => "13"
+    2018 || 18 || "2018" || "18" => "18"
+    _ => error("Cannot register WOA data from year $year")
 end
 
-cite_WOD13() = "Boyer, T. P., J. I. Antonov, O. K. Baranova, C. Coleman, H. E. Garcia, A. Grodsky, D. R. Johnson, R. A. Locarnini, A. V. Mishonov, T. D. O'Brien, C. R. Paver, J. R. Reagan, D. Seidov, I. V. Smolyar, and M. M. Zweng, 2013: World Ocean Database 2013, NOAA Atlas NESDIS 72, S. Levitus, Ed., A. Mishonov, Technical Ed.; Silver Spring, MD, 209 pp., doi:10.7289/V5NZ85MT"
-
-cite_WOA13_Temperature() = "Locarnini, R. A., A. V. Mishonov, J. I. Antonov, T. P. Boyer, H. E. Garcia, O. K. Baranova, M. M. Zweng, C. R. Paver, J. R. Reagan, D. R. Johnson, M. Hamilton, and D. Seidov, 2013. World Ocean Atlas 2013, Volume 1: Temperature. S. Levitus, Ed., A. Mishonov Technical Ed.; NOAA Atlas NESDIS 73, 40 pp."
-
-cite_WOA13_Salinity() = "Zweng, M. M., J. R. Reagan, J. I. Antonov, R. A. Locarnini, A. V. Mishonov, T. P. Boyer, H. E. Garcia, O. K. Baranova, D. R. Johnson, D. Seidov, M. M. Biddle, 2013. World Ocean Atlas 2013, Volume 2: Salinity. S. Levitus, Ed., A. Mishonov Technical Ed.; NOAA Atlas NESDIS 74, 39 pp."
-
-cite_WOA13_Oxygen() = "Garcia, H. E., R. A. Locarnini, T. P. Boyer, J. I. Antonov, O. K. Baranova, M. M. Zweng, J. R. Reagan, D. R. Johnson, 2014. World Ocean Atlas 2013, Volume 3: Dissolved Oxygen, Apparent Oxygen Utilization, and Oxygen Saturation. S. Levitus, Ed., A. Mishonov Technical Ed.; NOAA Atlas NESDIS 75, 27 pp."
-
-cite_WOA13_Nutrients() = "Garcia, H. E., R. A. Locarnini, T. P. Boyer, J. I. Antonov, O. K. Baranova, M. M. Zweng, J. R. Reagan, D. R. Johnson, 2014. World Ocean Atlas 2013, Volume 4: Dissolved Inorganic Nutrients (phosphate, nitrate, silicate). S. Levitus, Ed., A. Mishonov Technical Ed.; NOAA Atlas NESDIS 76, 25 pp."
-
+#============================================================
+Variable names
+============================================================#
 incorrect_varname(vv) = """
 "$vv" is an incorrect variable name.
 Use one of these `String`s:
@@ -60,7 +66,7 @@ Use one of these `String`s:
     - "p" for Phosphate
     - "n" for Nitrate
 """
-WOA13_path_varname(vv) = @match my_varname(vv) begin
+WOA_path_varname(vv) = @match my_varname(vv) begin
     "Temp"  => "temperature"
     "Salt"  => "salinity"
     "Dens"  => "density"
@@ -72,7 +78,7 @@ WOA13_path_varname(vv) = @match my_varname(vv) begin
     "DIN"   => "nitrate"
     "Cond"  => "conductivity"
 end
-WOA13_filename_varname(vv) = @match my_varname(vv) begin
+WOA_filename_varname(vv) = @match my_varname(vv) begin
     "Temp"  => "t"
     "Salt"  => "s"
     "Dens"  => "I"
@@ -91,14 +97,16 @@ my_varname(vv) = @match vv begin
     "o" || "O2" || "Oxygen" || "oxygen"  || "Dissolved oxygen"                         => "O2"
     "O" || "o2sat" || "O2sat" || "O2Sat" || "oxygen saturation" || "Oxygen saturation" => "O2sat"
     "A" || "AOU" || "Apparent oxygen utilization"                                      => "AOU"
-    "i" || "silicate" || "DSi" || "Silicic Acid" || "Si(OH)4" || "SiOH4"               => "DSi"
-    "p" || "phosphate" || "PO4" || "Phosphate" || "DIP"                                => "DIP"
-    "n" || "nitrate" || "NO3" || "Nitrate" || "DIN"                                    => "DIN"
+    "i" || "silicate" || "DSi" || "Silicic Acid" || "Si(OH)4" || "SiOH4" || "sioh4"    => "DSi"
+    "p" || "phosphate" || "PO4" || "Phosphate" || "DIP" || "po4"                       => "DIP"
+    "n" || "nitrate" || "NO3" || "Nitrate" || "DIN" || "no3"                           => "DIN"
     "C" || "conductivity" || "Conductivity" || "Cond" || "cond"                        => "Cond"
     _ => error(incorrect_varname(vv))
 end
 
-# Averaging period
+#============================================================
+Averaging period
+============================================================#
 incorrect_averagingperiod(tt) = """
 "$tt" is an incorrect averaging period.
 The averaging period must fit the World Ocean Atlas naming convention.
@@ -131,7 +139,7 @@ my_averaging_period(tt) = @match tt begin
     12 || "12" || "12" ||  "december" ||  "December" =>  "December"
     _ => error(incorrect_averagingperiod(tt))
 end
-WOA13_averaging_period(tt) = @match my_averaging_period(tt) begin
+WOA_averaging_period(tt) = @match my_averaging_period(tt) begin
     "Annual"    => "00"
     "Winter"    => "13"
     "Spring"    => "14"
@@ -151,6 +159,9 @@ WOA13_averaging_period(tt) = @match my_averaging_period(tt) begin
     "December"  => "12"
 end
 
+#============================================================
+Field type
+============================================================#
 # ff currently unused.
 # It is used when readong the ncfile though.
 incorrect_field_type_code(ff) = """
@@ -169,51 +180,72 @@ my_field_type_code(ff) = @match lowercase(ff) begin
     _ => error(incorrect_varfunc(ff))
 end
 
+#============================================================
+Resolution names
+============================================================#
 incorrect_resolution(gg) = """
 "$gg" is an incorrect resolution.
 Only these resolutions are available:
-    - "01" for 1°×1° resolution
+    - "1" for 1°×1° resolution
+    - "5" for 5°×5° resolution
+    - "0.25" for 0.25°×0.25° resolution
 You need to edit the `myresolution` function to add more!
 """
-WOA13_path_resolution(gg) = @match my_resolution(gg) begin
+WOA_path_resolution(gg) = @match my_resolution(gg) begin
     "0.25°" => "0.25"
     "1°"    => "1.00"
     "5°"    => "5deg"
 end
-WOA13_filename_resolution(gg) = @match my_resolution(gg) begin
+WOA_filename_resolution(gg) = @match my_resolution(gg) begin
     "0.25°" => "04"
     "1°"    => "01"
     "5°"    => "5d"
 end
+surface_grid_size(gg) = @match my_resolution(gg) begin
+    "0.25°" => "1440x720"
+    "1°"    => "360x180"
+    "5°"    => "73x36"
+end
 my_resolution(gg) = @match gg begin
-    "0.25°×0.25°" || "04" || "0.25" || "0.25d" || "0.25°" => "0.25°"
-    "1°×1°"       || "01" ||   "1d" ||            "1°"    => "1°"
-    "5°×5°"       || "05" ||   "5d" ||            "5°"    => "5°"
+    "0.25°×0.25°" || "04" || "0.25d" || "0.25" || "0.25°" => "0.25°"
+       "1°×1°"    || "01" || "1d"    || "1"    || "1°"    => "1°"
+       "5°×5°"    || "05" || "5d"    || "5"    || "5°"    => "5°"
     _ => error(incorrect_resolution(gg))
 end
 
-WOA13_decade(vv) = @match my_varname(vv) begin
+#============================================================
+Decade names
+============================================================#
+WOA_decade(vv) = @match my_varname(vv) begin
     "Temp" || "Salt" || "Dens" || "Cond" => "decav"
     "O2" || "O2sat" || "AOU" || "DSi" || "DIP" || "DIN" => "all"
     _ => error(incorrect_varname(vv))
 end
 
-WOA13_v2(vv) = @match my_varname(vv) begin
+WOA_v2(vv) = @match my_varname(vv) begin
     "Salt" || "Temp" => "v2"
     "Dens" || "Cond" || "O2" || "O2sat" || "AOU" || "DSi" || "DIP" || "DIN" => ""
     _ => error(incorrect_varname(vv))
 end
 
-function WOA13_NetCDF_filename(vv, tt, gg)
-    return string("woa13_", WOA13_decade(vv), "_",
-                  WOA13_filename_varname(vv),
-                  WOA13_averaging_period(tt), "_",
-                  WOA13_filename_resolution(gg),
-                  WOA13_v2(vv), ".nc")
+#============================================================
+NetCDF file name
+============================================================#
+function WOA_NetCDF_filename(year, vv, tt, gg)
+    return string("woa",
+                  my_year(year), "_",
+                  WOA_decade(vv), "_",
+                  WOA_filename_varname(vv),
+                  WOA_averaging_period(tt), "_",
+                  WOA_filename_resolution(gg),
+                  WOA_v2(vv), ".nc")
 end
 
+#============================================================
+URL
+============================================================#
 """
-    WOA13_URL(vv, tt, gg)
+    url_WOA(year, vv, tt, gg)
 
 Returns the URL (`String`) for the NetCDF file of the World Ocean Atlas.
 This URL `String` typically looks like
@@ -221,12 +253,20 @@ This URL `String` typically looks like
     "https://data.nodc.noaa.gov/woa/WOA13/DATAv2/phosphate/netcdf/all/1.00/woa13_all_p00_01.nc"
     ```
 """
-function url_WOA13(vv, tt, gg)
-    return string("https://data.nodc.noaa.gov/woa/WOA13/DATAv2/",
-                  WOA13_path_varname(vv), "/netcdf/",
-                  WOA13_decade(vv), "/",
-                  WOA13_path_resolution(gg), "/",
-                  WOA13_NetCDF_filename(vv, tt, gg))
+function url_WOA(year, vv, tt, gg)
+    return string("https://data.nodc.noaa.gov/woa/WOA",
+                  my_year(year), "/",
+                  url_DATA(year), "/",
+                  WOA_path_varname(vv), "/netcdf/",
+                  WOA_decade(vv), "/",
+                  WOA_path_resolution(gg), "/",
+                  WOA_NetCDF_filename(year, vv, tt, gg))
 end
 
-export WOA13_NetCDF_filename, register_WOA13, cite_WOA13, WOA13_filename_varname
+url_DATA(year) = @match my_year(year) begin
+    "09" => "DATA"
+    "13" => "DATAv2"
+    "18" => "DATA"
+end
+
+export WOA_NetCDF_filename, register_WOA, cite_WOA, WOA_filename_varname

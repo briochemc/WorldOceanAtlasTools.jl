@@ -1,8 +1,8 @@
 
-WOA13_varname(vv, ff) = string(WOA13_filename_varname(vv), "_", my_field_type_code(ff))
+WOA_varname(vv, ff) = string(WOA_filename_varname(vv), "_", my_field_type_code(ff))
 
 """
-    WOA13_mean_and_variance_per_grid_box(grd, vv, tt, gg)
+    WOA_mean_and_variance_per_grid_box(grd, vv, tt, gg)
 
 Bin the data into the grid, `grd`
 That is take the observations `μᵢ` from WOA's grid (with `gg` resolution)
@@ -17,16 +17,16 @@ for that given box is:
 - μ = Σᵢ μᵢ / n
 - σ² = ∑ᵢ μᵢ² / n - μ²
 """
-function WOA13_mean_and_variance_per_grid_box(grd, vv, tt, gg)
-    println("Averaging WOA 13 data into your grid")
-    register_WOA13(vv, tt, gg)
-    nc_file = @datadep_str string("WOA13_", my_varname(vv), "/", WOA13_NetCDF_filename(vv, tt, gg))
+function WOA_mean_and_variance_per_grid_box(grd, year, vv, tt, gg)
+    println("Averaging WOA$(my_year(year)) $(my_averaging_period(tt)) $(WOA_path_varname(vv)) $(surface_grid_size(gg)) data into your grid")
+    register_WOA(year, vv, tt, gg)
+    nc_file = @datadep_str string(my_DataDeps_name(year, vv, tt, gg), "/", WOA_NetCDF_filename(year, vv, tt, gg))
     println("  Reading NetCDF file")
     woa_lon = ncread(nc_file, "lon")
     woa_lat = ncread(nc_file, "lat")
     woa_depth = ncread(nc_file, "depth")
     ff = "an"
-    woa_μ_3d = ncread(nc_file, WOA13_varname(vv, ff))[:, :, :, 1] # Annual mean of obs
+    woa_μ_3d = ncread(nc_file, WOA_varname(vv, ff))[:, :, :, 1] # Annual mean of obs
     # Reorder the variable index order (lat <-> lon from WOA to OCIM)
     println("  Rearranging data")
     woa_μ_3d = permutedims(woa_μ_3d, [2 1 3])
@@ -37,7 +37,7 @@ function WOA13_mean_and_variance_per_grid_box(grd, vv, tt, gg)
     woa_μ_3d .= woa_μ_3d[:, lon_reordering, :]
     # Find where there is data for both mean and std
     println("  Filtering data")
-    μfillvalue = ncgetatt(nc_file, WOA13_varname(vv, ff), "_FillValue")
+    μfillvalue = ncgetatt(nc_file, WOA_varname(vv, ff), "_FillValue")
     CI = findall((woa_μ_3d .≠ μfillvalue) .& (woa_μ_3d .≠ 0)) # filter out fill-values and 0's
     woa_μ_col = woa_μ_3d[CI]
     woa_lat_col = woa_lat[map(x -> x.I[1], CI)]
@@ -70,7 +70,7 @@ function WOA13_mean_and_variance_per_grid_box(grd, vv, tt, gg)
     μ = mean(μ_3d, weights(n_woa_3d))
     σ²_3d .= max.(σ²_3d, 1e-4μ^2)
     # Convert to SI units
-    μ_WOAunit = ncgetatt(nc_file, WOA13_varname(vv, ff), "units")
+    μ_WOAunit = ncgetatt(nc_file, WOA_varname(vv, ff), "units")
     μ_unit = convert_WOAunits_to_unitful(μ_WOAunit)
     μ_3d .*= ustrip(upreferred(1.0μ_unit))
     σ²_3d .*= ustrip(upreferred(1.0μ_unit^2))
@@ -89,4 +89,4 @@ grid_edges(grd) = lat_edges(grd), lon_edges(grd), depth_edges(grd)
 # `bin_index` is called so many times on the same indices that much faster memoized :)
 @memoize bin_index(x, edges) = all(edges .≤ x) ? length(edges) - 1 : findfirst(edges .> x) - 1
 
-export WOA13_mean_and_variance_per_grid_box, WOA13_varname
+export WOA_mean_and_variance_per_grid_box, WOA_varname

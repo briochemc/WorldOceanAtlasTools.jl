@@ -10,7 +10,7 @@ ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 @testset "Downloading" begin
     years = [2013, 2018] # WOA years with NetCDF at these URLs
     vvs = ["p", "i", "n"] # nutrients only
-    tts = collect(0:16)
+    tts = [0, 1, 13] # Annual, 1 month and 1 season — no need to test every month and season
     ggs = ["5°", "1°"]
 
     @testset " WOA$(WOAT.my_year(year))" for year in years

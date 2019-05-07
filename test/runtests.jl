@@ -10,7 +10,8 @@ ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
 @testset "Testing OPeNDAP" begin
     #years = [2009, 2013, 2018] # years of WOA products
-    years = [2009, 2018] # years of WOA products with OPeNDAP workign URLs
+    #years = [2009, 2018] # years of WOA products with OPeNDAP workign URLs
+    years = [2018] # just test 2018 links, tough luck for the other ones...
     vvs = ["p", "i", "n"] # nutrients only
     tts = [0, 1, 13] # Annual, 1 month and 1 season — no need to test every month and season
     ggs = ["5°", "1°"]

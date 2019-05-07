@@ -19,7 +19,7 @@ ENV["DATADEPS_ALWAYS_ACCEPT"] = true
                 @testset " $(WOAT.WOA_path_varname(vv))" for vv in vvs
                     woa_lat, woa_lon, woa_μ_2D = WOAT.WOA_surface_map(year, vv, tt, gg)
                     @test woa_μ_2D isa Array{<:AbstractFloat, 2}
-                    WOAT.WOA_remove(year, vv, tt, gg)
+                    # WOAT.WOA_remove(year, vv, tt, gg)
                 end
             end
         end

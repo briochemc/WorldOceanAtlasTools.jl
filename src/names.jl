@@ -158,6 +158,11 @@ WOA_averaging_period(tt) = @match my_averaging_period(tt) begin
     "November"  => "11"
     "December"  => "12"
 end
+seasonal_annual_monthly(tt) = @match WOA_averaging_period(tt) begin
+    "00" => "annual"
+    "13" || "14" || "15" || "16" => "seasonal"
+    _ => "monthly"
+end
 
 #============================================================
 Field type
@@ -212,6 +217,11 @@ my_resolution(gg) = @match gg begin
        "5°×5°"    || "05" || "5d"    || "5"    || "5°"    => "5°"
     _ => error(incorrect_resolution(gg))
 end
+WOA09_file_resolution(gg) = @match my_resolution(gg) begin
+    "1°" => "1deg"
+    "5°" => "5deg"
+    _ => error("No such resolution for WOA09 data")
+end
 
 #============================================================
 Decade names
@@ -242,7 +252,7 @@ function WOA_NetCDF_filename(year, vv, tt, gg)
 end
 
 #============================================================
-URL
+URLs
 ============================================================#
 """
     url_WOA(year, vv, tt, gg)
@@ -253,16 +263,27 @@ This URL `String` typically looks like
     "https://data.nodc.noaa.gov/woa/WOA13/DATAv2/phosphate/netcdf/all/1.00/woa13_all_p00_01.nc"
     ```
 """
-function url_WOA(year, vv, tt, gg)
-    return string("https://data.nodc.noaa.gov/woa/WOA",
-                  my_year(year), "/",
-                  url_DATA(year), "/",
-                  WOA_path_varname(vv), "/netcdf/",
-                  WOA_decade(vv), "/",
-                  WOA_path_resolution(gg), "/",
-                  WOA_NetCDF_filename(year, vv, tt, gg))
+url_WOA(year, vv, tt, gg) = string("https://data.nodc.noaa.gov/woa/WOA",
+                                   my_year(year), "/",
+                                   url_DATA(year), "/",
+                                   WOA_path_varname(vv), "/netcdf/",
+                                   WOA_decade(vv), "/",
+                                   WOA_path_resolution(gg), "/",
+                                   WOA_NetCDF_filename(year, vv, tt, gg))
+url_WOA_THREDDS_18(vv, tt, gg) = string("https://data.nodc.noaa.gov/thredds/dodsC/ncei/woa/",
+                                        WOA_path_varname(vv), "/",
+                                        WOA_decade(vv), "/",
+                                        WOA_path_resolution(gg), "/",
+                                        WOA_NetCDF_filename(2018, vv, tt, gg))
+url_WOA_THREDDS_09(vv, tt, gg) = string("https://data.nodc.noaa.gov/thredds/dodsC/woa09/",
+                                        WOA_path_varname(vv), "_",
+                                        seasonal_annual_monthly(tt), "_",
+                                        WOA09_file_resolution(gg), ".nc")
+url_WOA_THREDDS(year, vv, tt, gg) = @match my_year(year) begin
+    "18" => url_WOA_THREDDS_18(vv, tt, gg)
+    "09" => url_WOA_THREDDS_09(vv, tt, gg)
+    _ => "No THREDDS links for year $year"
 end
-
 url_DATA(year) = @match my_year(year) begin
     "09" => "DATA"
     "13" => "DATAv2"

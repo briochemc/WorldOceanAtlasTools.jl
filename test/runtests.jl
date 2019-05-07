@@ -1,5 +1,6 @@
 
 using Test, WorldOceanAtlasTools
+using NCDatasets
 
 # Alias for short name
 WOAT = WorldOceanAtlasTools
@@ -7,19 +8,29 @@ WOAT = WorldOceanAtlasTools
 # For CI, make sure the download does not hang
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
-@testset "Downloading" begin
-    years = [2013, 2018] # WOA years with NetCDF at these URLs
+@testset "Testing OPeNDAP" begin
+    #years = [2009, 2013, 2018] # years of WOA products
+    years = [2009, 2018] # years of WOA products with OPeNDAP workign URLs
     vvs = ["p", "i", "n"] # nutrients only
     tts = [0, 1, 13] # Annual, 1 month and 1 season — no need to test every month and season
     ggs = ["5°", "1°"]
+    ffs = ["mn", "an"]
 
-    @testset " WOA$(WOAT.my_year(year))" for year in years
-        @testset "Downloading $gg x $gg" for gg in ggs
-            @testset " $(WOAT.my_averaging_period(tt))" for tt in tts
-                @testset " $(WOAT.WOA_path_varname(vv))" for vv in vvs
-                    woa_lat, woa_lon, woa_μ_2D = WOAT.WOA_surface_map(year, vv, tt, gg)
-                    @test woa_μ_2D isa Array{<:AbstractFloat, 2}
-                    # WOAT.WOA_remove(year, vv, tt, gg)
+    @testset "WOA$(WOAT.my_year(year))" for year in years
+        @testset "$gg x $gg grid" for gg in ggs
+            @testset "$(WOAT.my_averaging_period(tt)) period" for tt in tts
+                @testset "$(WOAT.WOA_path_varname(vv)) tracer" for vv in vvs
+                    ds = Dataset(WOAT.NetCDF_path(year, vv, tt, gg))
+                    @testset "$ff field" for ff in ffs
+                        if gg ≠ "5°" || ff ≠ "an"
+                            @test haskey(ds, WOAT.WOA_varname(vv, ff))
+                        end
+                    end
+                    @testset "dimensions" begin
+                        @test haskey(ds, "lat")
+                        @test haskey(ds, "lon")
+                        @test haskey(ds, "depth")
+                    end
                 end
             end
         end

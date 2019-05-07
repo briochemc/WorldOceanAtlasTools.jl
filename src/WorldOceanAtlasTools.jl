@@ -1,6 +1,6 @@
 module WorldOceanAtlasTools
 
-using DataDeps, NetCDF, Match, Memoize, StatsBase, Unitful
+using DataDeps, NCDatasets, Match, Memoize, StatsBase, Unitful
 
 include("names.jl")
 include("citations.jl")

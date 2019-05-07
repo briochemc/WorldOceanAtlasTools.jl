@@ -38,3 +38,7 @@ The goal is to provide an API that has access to parts of [this list](https://ww
 
 This is a work in progress although it is currently used by the [AIBECS.jl](https://github.com/briochemc/AIBECS.jl) package and depending projects.
 PRs, suggestions, and generally help are, of course, more than welcome!
+
+WorldOceanAtlasTools essentially defines the nomenclature and URLs used by the World Ocean Atlas and then relies on the [DataDeps.jl](https://github.com/oxinabox/DataDeps.jl) package developed by [White et al. (2018)](https://arxiv.org/abs/1808.01091) to download the corresponding NetCDF files.
+(NetCDF files are read using the [NetCDF.jl](https://github.com/JuliaGeo/NetCDF.jl) package.)
+

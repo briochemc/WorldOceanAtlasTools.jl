@@ -19,5 +19,5 @@ end
 function WOA_remove(year, vv, tt, gg)
     println("Removing WOA$(my_year(year)) $(my_averaging_period(tt)) $(WOA_path_varname(vv)) $(surface_grid_size(gg)) data")
     nc_file = @datadep_str string(my_DataDeps_name(year, vv, tt, gg), "/", WOA_NetCDF_filename(year, vv, tt, gg))
-    rm(nc_file; recursive=true)
+    rm(nc_file; recursive=true, force=true)
 end

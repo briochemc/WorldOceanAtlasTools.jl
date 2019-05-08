@@ -15,24 +15,24 @@ end
 ```
 
 This is an example use of the software.
-To download surface maps, simply call `WOA_surface_map(WOA_year, tracer_name, period, resolution)`.
-For example, for the surface map of the concentration of phosphate for the month of February from the WOA18 product at 5-degree resolution.
+Here is an example to download the 3D field of the concentration of phosphate for the month of February from the World Ocean Atlas 2018 product at 5-degree resolution.
 
 ```jldoctest usage
-lat, lon, my_map = WorldOceanAtlasTools.WOA_surface_map(2018, "p", 2, "5")
-size(my_map)
+P3D = WorldOceanAtlasTools.get_3D_field(2018, "phosphate", "Feb", "5°", "mean")
+size(P3D)
 
 # output
 
-(36, 72)
+(36, 72, 43)
 ```
 
-## WOA 3D fields
+## Fitting a 3D field from WOA to another grid
 
 TODO
 
-## Interpolating 3D fields to another model grid
+## Functions
 
-TODO
-
-
+```@autodocs
+Modules = [WorldOceantAtlasTools]
+Order   = [:function, :type]
+```

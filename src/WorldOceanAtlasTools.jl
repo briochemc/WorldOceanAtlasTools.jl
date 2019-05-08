@@ -4,9 +4,9 @@ using DataDeps, NCDatasets, Match, Memoize, StatsBase, Unitful
 
 include("names.jl")
 include("citations.jl")
-include("interpolations.jl")
-include("WOA_units_to_Unitful.jl")
-include("arrays.jl")
+#include("interpolations.jl")
+include("convert_to_Unitful.jl")
+include("functions.jl")
 
 #=====================================
     TODO list?

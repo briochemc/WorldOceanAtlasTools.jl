@@ -25,11 +25,11 @@
   </a>
 </p>
 <p>
-  <a href="https://codecov.io/gh/briochemc/WorldOceanAtlasTools.jl">
-    <img src="https://codecov.io/gh/briochemc/WorldOceanAtlasTools.jl/branch/master/graph/badge.svg" />
-  </a>
   <a href="https://ci.appveyor.com/project/briochemc/WorldOceanAtlasTools-jl">
     <img alt="Build Status" src="https://ci.appveyor.com/api/projects/status/76lcl30w1uxbirx2?svg=true">
+  </a>
+  <a href="https://codecov.io/gh/briochemc/WorldOceanAtlasTools.jl">
+    <img src="https://codecov.io/gh/briochemc/WorldOceanAtlasTools.jl/branch/master/graph/badge.svg" />
   </a>
 </p>
 
@@ -43,3 +43,4 @@ PRs, suggestions, and generally help are, of course, more than welcome!
 WorldOceanAtlasTools essentially defines the nomenclature and URLs used by the World Ocean Atlas and then relies on the [DataDeps.jl](https://github.com/oxinabox/DataDeps.jl) package developed by [White et al. (2018)](https://arxiv.org/abs/1808.01091) to download the corresponding NetCDF files.
 (NetCDF files are read using the [NCDatasets.jl](https://github.com/Alexander-Barth/NCDatasets.jl) package.)
 
+If you use this package, please cite it using the [CITATION.bib](./CITATION.bib) file, and cite the WOA references using the `citation` function. 

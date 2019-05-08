@@ -40,5 +40,5 @@ This is a work in progress although it is currently used by the [AIBECS.jl](http
 PRs, suggestions, and generally help are, of course, more than welcome!
 
 WorldOceanAtlasTools essentially defines the nomenclature and URLs used by the World Ocean Atlas and then relies on the [DataDeps.jl](https://github.com/oxinabox/DataDeps.jl) package developed by [White et al. (2018)](https://arxiv.org/abs/1808.01091) to download the corresponding NetCDF files.
-(NetCDF files are read using the [NetCDF.jl](https://github.com/JuliaGeo/NetCDF.jl) package.)
+(NetCDF files are read using the [NCDatasets.jl](https://github.com/Alexander-Barth/NCDatasets.jl) package.)
 

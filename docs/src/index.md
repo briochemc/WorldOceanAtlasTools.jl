@@ -32,7 +32,6 @@ TODO
 
 ## Functions
 
-```@autodocs
-Modules = [WorldOceantAtlasTools]
-Order   = [:function, :type]
+```@docs
+get_3D_field(product_year, tracer, period, resolution, field)
 ```

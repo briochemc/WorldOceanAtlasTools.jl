@@ -59,6 +59,8 @@ function mean_and_variance_gridded_3d_field(grd, field3D, lat, lon, depth)
     χ_3D = zeros(length(grd["yt"]), length(grd["xt"]), length(grd["zt"]))
     σ²_3D = zeros(length(grd["yt"]), length(grd["xt"]), length(grd["zt"]))
     n_3D = zeros(length(grd["yt"]), length(grd["xt"]), length(grd["zt"]))
+    # edges of `grd` grid for binning
+    elat, elon, edepth = grid_edges(grd)
     for i in eachindex(CI)
         x = bin_index(lonvec[i], elon)
         y = bin_index(latvec[i], elat)
@@ -90,7 +92,6 @@ end
 function fit_to_grid(grd, product_year, tracer, period, resolution, field)
     ds = WOA_Dataset(product_year, tracer, period, resolution)
     field3D, lat, lon, depth = get_gridded_3D_field(ds, tracer, field)
-    fieldvec, latvec, lonvec, depthvec, CI = filter_gridded_3D_field(field3D, lat, lon, depth)
     χ_3D, σ²_3D = mean_and_variance_gridded_3d_field(grd, field3D, lat, lon, depth)
     convert_to_SI_unit!(χ_3D, σ²_3D, ds, tracer, field)
     return χ_3D, σ²_3D

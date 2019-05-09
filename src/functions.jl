@@ -87,7 +87,7 @@ function convert_to_SI_unit!(χ_3D, σ²_3D, ds, tracer, field)
     σ²_3D .*= ustrip(upreferred(1.0χ_unit^2))
 end
 
-function fit_WOA_to_grid(grd, product_year, tracer, period, resolution, field)
+function fit_to_grid(grd, product_year, tracer, period, resolution, field)
     ds = WOA_Dataset(product_year, tracer, period, resolution)
     field3D, lat, lon, depth = get_gridded_3D_field(ds, tracer, field)
     fieldvec, latvec, lonvec, depthvec, CI = filter_gridded_3D_field(field3D, lat, lon, depth)

@@ -20,8 +20,8 @@
   <a href="https://travis-ci.com/briochemc/WorldOceanAtlasTools.jl">
     <img alt="Build Status" src="https://travis-ci.com/briochemc/WorldOceanAtlasTools.jl.svg?branch=master">
   </a>
-  <a href='https://coveralls.io/github/briochemc/WorldOceanAtlasTools.jl'>
-    <img src='https://coveralls.io/repos/github/briochemc/WorldOceanAtlasTools.jl/badge.svg' alt='Coverage Status' />
+  <a href='https://coveralls.io/github/briochemc/WorldOceanAtlasTools.jl?branch=master'>
+    <img src='https://coveralls.io/repos/github/briochemc/WorldOceanAtlasTools.jl/badge.svg?branch=master' alt='Coverage Status' />
   </a>
 </p>
 <p>

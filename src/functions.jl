@@ -100,7 +100,7 @@ end
 
 
 #==================================
-    Helper functions
+Helper functions
 ==================================#
 
 lat_edges(grd) = vcat(vec(grd["yt"] .- 0.5grd["dyt"]), last(vec(grd["yt"] .+ 0.5grd["dyt"])))
@@ -112,7 +112,7 @@ grid_edges(grd) = lat_edges(grd), lon_edges(grd), depth_edges(grd)
 @memoize bin_index(x, edges) = all(edges .≤ x) ? length(edges) - 1 : findfirst(edges .> x) - 1
 
 #==================================
-    Helper functions
+Helper functions
 ==================================#
 
 function WOA_Dataset(product_year, tracer, period, resolution, verbose=false)

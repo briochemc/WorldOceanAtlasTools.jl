@@ -74,7 +74,6 @@ end
         @test lonvec isa Vector
         @test depthvec isa Vector
     end
-
     @testset "fit_to_grid" begin
         grd = build_grd()
         a, b = WOA.fit_to_grid(grd, product_year, tracer, period, resolution, field)
@@ -84,5 +83,6 @@ end
         @test size(a) == (2,1,3)
         @test b isa Array{Float64, 3}
         @test size(b) == (2,1,3)
+        @test 1e-3 < sum(a) / length(a) < 3e-3 # mean PO₄ ≈ 2e-3 mol m⁻³
     end
 end

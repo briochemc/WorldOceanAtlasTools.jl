@@ -12,6 +12,6 @@ to units of Unitful
 =====================================#
 
 const UNITFUL_WOA = Dict(
-    "micromoles_per_liter"    => u"mmol/l",
-    "micromoles_per_kilogram" => u"mmol/l"
+    "micromoles_per_liter"    => u"μmol/l",
+    "micromoles_per_kilogram" => u"μmol/l"
 )

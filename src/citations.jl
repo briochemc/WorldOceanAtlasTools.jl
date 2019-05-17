@@ -3,7 +3,7 @@ citation(year, vv) = @match my_varname(vv) begin
     "Temp" => citation_Temperature(year)
     "Salt" => citation_Salinity(year)
     "O2" || "O2sat" || "AOU" => citation_Oxygen(year)
-    "Dens" || "Cond" => cite_WOD(year)
+    "Dens" || "Cond" => citation(year)
     _ => error("Not sure what you are trying to cite.")
 end
 

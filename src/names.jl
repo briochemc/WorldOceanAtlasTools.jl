@@ -19,7 +19,7 @@ Registers a `datadep` for the variable `tracer` averaged over `period` at resolu
 function register_WOA(product_year, tracer, period, resolution)
     register(DataDep(
         my_DataDeps_name(product_year, tracer, period, resolution),
-        string(cite_WOD(product_year), "\n\n", cite_WOA(product_year, tracer)),
+        string(citation(product_year, tracer)),
         url_WOA(product_year, tracer, period, resolution),
         sha2_256,
         fetch_method = fallback_download

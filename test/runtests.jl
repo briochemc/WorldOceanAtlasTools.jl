@@ -10,4 +10,5 @@ ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
 # include("test_urls.jl") # Only include locally, as it URLs randomly fail
 include("test_functions.jl")
+include("test_citations.jl")
 

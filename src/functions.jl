@@ -115,18 +115,14 @@ grid_edges(grd) = lat_edges(grd), lon_edges(grd), depth_edges(grd)
 Helper functions
 ==================================#
 
-function WOA_Dataset(product_year, tracer, period, resolution, verbose=false)
-    println("Trying OPeNDAP first")
+function WOA_Dataset(product_year, tracer, period, resolution; verbose=false)
+    println("Registering WOA data with DataDeps")
     verbose && print(": ", url_WOA_THREDDS(product_year, tracer, period, resolution))
-    return try # OPeNDAP
-        Dataset(url_WOA_THREDDS(product_year, tracer, period, resolution))
-    catch
-        register_WOA(product_year, tracer, period, resolution)
-        ddstr = @datadep_str string(my_DataDeps_name(product_year, tracer, period, resolution),
-                            "/", 
-                            WOA_NetCDF_filename(product_year, tracer, period, resolution))
-        Dataset(ddstr)
-    end
+    register_WOA(product_year, tracer, period, resolution)
+    ddstr = @datadep_str string(my_DataDeps_name(product_year, tracer, period, resolution),
+                        "/", 
+                        WOA_NetCDF_filename(product_year, tracer, period, resolution))
+    Dataset(ddstr)
 end
 
 function remove_DataDep(product_year, tracer, period, resolution)

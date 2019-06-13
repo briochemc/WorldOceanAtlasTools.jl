@@ -1,3 +1,7 @@
+<a href="https://github.com/briochemc/WorldOceanAtlasTools.jl">
+  <img src="https://user-images.githubusercontent.com/4486578/59411626-07e2ed00-8dff-11e9-8daf-e823f61124d9.png" width="100%" align="center">
+</a>
+
 # World Ocean Atlas Tools
 
 <p>
@@ -34,13 +38,14 @@
 </p>
 
 
-This package was developed for the purpose of downloading and using data from the World Ocean Atlas (WOA) database.
-The goal is to provide an API that has access to parts of [this list](https://www.nodc.noaa.gov/OC5/indprod.html) of WOA data sets and products (located on the National Oceanic and Atmospheric Administration (NOAA) wesbite).
+[WorldOceanAtlasTools.jl](https://github.com/briochemc/WorldOceanAtlasTools.jl) was developed for the purpose of downloading and using data from the World Ocean Atlas (WOA) database to be used by the [AIBECS.jl](https://github.com/briochemc/AIBECS.jl) package.
+The more generic ambition is for [WorldOceanAtlasTools.jl](https://github.com/briochemc/WorldOceanAtlasTools.jl) to provide an API that can fetch data from [this list](https://www.nodc.noaa.gov/OC5/indprod.html) of WOA data sets and products (located on the National Oceanic and Atmospheric Administration (NOAA) wesbite) and fit it to any model's grid.
 
-This is a work in progress although it is currently used by the [AIBECS.jl](https://github.com/briochemc/AIBECS.jl) package and depending projects.
-PRs, suggestions, and generally help are, of course, more than welcome!
+This is a work in progress, therefore PRs, suggestions, and generally help are, of course, more than welcome!
 
-WorldOceanAtlasTools essentially defines the nomenclature and URLs used by the World Ocean Atlas and then relies on the [DataDeps.jl](https://github.com/oxinabox/DataDeps.jl) package developed by [White et al. (2018)](https://arxiv.org/abs/1808.01091) to download the corresponding NetCDF files.
+[WorldOceanAtlasTools.jl](https://github.com/briochemc/WorldOceanAtlasTools.jl) essentially defines the nomenclature and URLs used by the WOA and then relies on the [DataDeps.jl](https://github.com/oxinabox/DataDeps.jl) package developed by [White et al. (2018)](https://arxiv.org/abs/1808.01091) to download the corresponding NetCDF files.
 (NetCDF files are read using the [NCDatasets.jl](https://github.com/Alexander-Barth/NCDatasets.jl) package.)
 
-If you use this package, please cite it using the [CITATION.bib](./CITATION.bib) file, and cite the WOA references using the `citation` function. 
+In order to facilitate the use of WOA data in [AIBECS.jl](https://github.com/briochemc/AIBECS.jl), the [WorldOceanAtlasTools.jl](https://github.com/briochemc/WorldOceanAtlasTools.jl) package can use a `grid` from the [OceanGrids.jl](https://github.com/briochemc/OceanGrids.jl) package and bin a WOA tracer into that grid, and uses the [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) package to decide where to bin each observation.
+
+If you use this package, please cite it using the [CITATION.bib](./CITATION.bib) file, and cite the WOA references using the `citation` function or use the corresponding bibtex entries in the [CITATION.bib](./CITATION.bib) file. 

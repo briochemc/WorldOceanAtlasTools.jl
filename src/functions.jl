@@ -53,21 +53,21 @@ end
 
 get_unit(ds, tracer, field) = convert_to_Unitful(ds[WOA_varname(tracer, field)].attrib["units"])
 
-function mean_and_variance_gridded_3d_field(grd, field3D, lat, lon, depth)
+function mean_and_variance_gridded_3d_field(grid::OceanGrid, field3D, lat, lon, depth)
     fieldvec, latvec, lonvec, depthvec, CI = filter_gridded_3D_field(field3D, lat, lon, depth)
     println("  Averaging data over each grid box")
-    χ_3D = zeros(length(grd["yt"]), length(grd["xt"]), length(grd["zt"]))
-    σ²_3D = zeros(length(grd["yt"]), length(grd["xt"]), length(grd["zt"]))
-    n_3D = zeros(length(grd["yt"]), length(grd["xt"]), length(grd["zt"]))
-    # edges of `grd` grid for binning
-    elat, elon, edepth = grid_edges(grd)
+    χ_3D = zeros(size(grid))
+    σ²_3D = zeros(size(grid))
+    n_3D = zeros(size(grid))
+    # Use NearestNeighbors to bin into OceanGrid
+    gridbox_centers = [ustrip.(vec(grid.lat_3D)) ustrip.(vec(grid.lon_3D)) ustrip.(vec(grid.depth_3D))] # TODO Maybe add option for using iwet instead of full vec
+    gridbox_centers = permutedims(gridbox_centers, [2, 1])
+    kdtree = KDTree(gridbox_centers)
     for i in eachindex(CI)
-        x = bin_index(lonvec[i], elon)
-        y = bin_index(latvec[i], elat)
-        z = bin_index(depthvec[i], edepth)
-        χ_3D[y, x, z] += fieldvec[i]      # μ = Σᵢ μᵢ / n
-        σ²_3D[y, x, z] += fieldvec[i]^2   # σ² = Σᵢ μᵢ² / n - μ²
-        n_3D[y, x, z] += 1
+        idx = knn(kdtree, [lonvec[i], latvec[i], depthvec[i]], 1, true)[1][1]
+        χ_3D[idx] += fieldvec[i]      # μ = Σᵢ μᵢ / n
+        σ²_3D[idx] += fieldvec[i]^2   # σ² = Σᵢ μᵢ² / n - μ²
+        n_3D[idx] += 1
     end
     χ_3D .= χ_3D ./ n_3D               # μ = Σᵢ μᵢ / n
     σ²_3D .= σ²_3D ./ n_3D .- χ_3D.^2  # σ² = Σᵢ μᵢ² / n - μ²
@@ -89,27 +89,13 @@ function convert_to_SI_unit!(χ_3D, σ²_3D, ds, tracer, field)
     σ²_3D .*= ustrip(upreferred(1.0χ_unit^2))
 end
 
-function fit_to_grid(grd, product_year, tracer, period, resolution, field)
+function fit_to_grid(grid::OceanGrid, product_year, tracer, period, resolution, field)
     ds = WOA_Dataset(product_year, tracer, period, resolution)
     field3D, lat, lon, depth = get_gridded_3D_field(ds, tracer, field)
-    χ_3D, σ²_3D = mean_and_variance_gridded_3d_field(grd, field3D, lat, lon, depth)
+    χ_3D, σ²_3D = mean_and_variance_gridded_3d_field(grid, field3D, lat, lon, depth)
     convert_to_SI_unit!(χ_3D, σ²_3D, ds, tracer, field)
     return χ_3D, σ²_3D
 end
-
-
-
-#==================================
-Helper functions
-==================================#
-
-lat_edges(grd) = vcat(vec(grd["yt"] .- 0.5grd["dyt"]), last(vec(grd["yt"] .+ 0.5grd["dyt"])))
-lon_edges(grd) = vcat(vec(grd["xt"] .- 0.5grd["dxt"]), last(vec(grd["xt"] .+ 0.5grd["dxt"])))
-depth_edges(grd) = vcat(0, cumsum(vec(grd["dzt"])))
-grid_edges(grd) = lat_edges(grd), lon_edges(grd), depth_edges(grd)
-
-# `bin_index` is called so many times on the same indices that much faster memoized :)
-@memoize bin_index(x, edges) = all(edges .≤ x) ? length(edges) - 1 : findfirst(edges .> x) - 1
 
 #==================================
 Helper functions

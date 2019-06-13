@@ -1,6 +1,7 @@
 
 using Test, WorldOceanAtlasTools
 using NCDatasets
+using OceanGrids, Unitful
 
 # Alias for short name
 WOA = WorldOceanAtlasTools

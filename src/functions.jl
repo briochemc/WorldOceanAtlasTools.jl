@@ -26,9 +26,9 @@ end
 function get_gridded_3D_field(ds, tracer, field)
     println("  Reading NetCDF file")
     field3D = ds[WOA_varname(tracer, field)][:][:, :, :, 1]
-    lon   = ds["lon"][:]
-    lat   = ds["lat"][:]
-    depth = ds["depth"][:]
+    lon   = ds["lon"][:]   .|> Float64
+    lat   = ds["lat"][:]   .|> Float64
+    depth = ds["depth"][:] .|> Float64
     println("  Rearranging data")
     # Reorder the variable index order (lat <-> lon from WOA to OCIM)
     field3D = permutedims(field3D, [2 1 3])
@@ -40,10 +40,42 @@ function get_gridded_3D_field(ds, tracer, field)
     return field3D, lat, lon, depth
 end
 
+"""
+    mean_std_and_number_obs(ds, tracer)
+
+Returns a DataFrame containing the following columns
+lat, lon, depth, mean, std, nobs
+"""
+function mean_std_and_number_obs(ds, tracer)
+    println("  Reading NetCDF file")
+    lon   = mod.(ds["lon"][:] .|> Float64, 360)
+    lat   = ds["lat"][:]   .|> Float64
+    depth = ds["depth"][:] .|> Float64
+    μ3D    = ds[WOA_varname(tracer, "mn")][:][:, :, :, 1]
+    σ3D    = ds[WOA_varname(tracer, "sd")][:][:, :, :, 1]
+    nobs3D = ds[WOA_varname(tracer, "dd")][:][:, :, :, 1]
+    println("  Filtering missing data")
+    CI = findall(@. !ismissing(μ3D) & !ismissing(nobs3D) & !iszero(nobs3D))
+    lon1D   = lon[map(x -> x.I[1], CI)]
+    lat1D   = lat[map(x -> x.I[2], CI)]
+    depth1D = depth[map(x -> x.I[3], CI)]
+    μ1D     = μ3D[CI] .|> Float64
+    σ1D     = σ3D[CI] .|> Float64
+    nobs1D  = nobs3D[CI] .|> Int64
+    return DataFrame(
+                     :Latitude => lat1D,
+                     :Longitude => lon1D,
+                     :Depth => depth1D,
+                     :Mean => μ1D,
+                     :Std => σ1D,
+                     :n_obs => nobs1D,
+                    )
+end
+
 function filter_gridded_3D_field(field3D, lat, lon, depth)
     # Find where there is data for both mean and std
     println("  Filtering data")
-    CI = findall(.~ismissing.(field3D) .& (field3D .≠ 0)) # filter out fill-values and 0's
+    CI = findall(x -> !ismissing(x) && !iszero(x), field3D) # filter out fill-values and 0's
     fieldvec = field3D[CI]
     latvec = lat[map(x -> x.I[1], CI)]
     lonvec = lon[map(x -> x.I[2], CI)]

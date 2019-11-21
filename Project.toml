@@ -13,13 +13,13 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
-DataDeps = "0.6"
+DataDeps = "0.7"
 Match = "1"
 NCDatasets = "0.9"
 NearestNeighbors = "0.4"
 OceanGrids = "0.1"
-StatsBase = "0.30"
-Unitful = "0.15"
+StatsBase = "0.32"
+Unitful = "0.17"
 julia = "1"
 
 [extras]

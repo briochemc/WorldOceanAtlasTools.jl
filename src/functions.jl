@@ -96,7 +96,7 @@ function mean_and_variance_gridded_3d_field(grid::OceanGrid, field3D, lat, lon, 
     gridbox_centers = permutedims(gridbox_centers, [2, 1])
     kdtree = KDTree(gridbox_centers)
     for i in eachindex(CI)
-        idx = knn(kdtree, [lonvec[i], latvec[i], depthvec[i]], 1, true)[1][1]
+        idx = knn(kdtree, [latvec[i], lonvec[i], depthvec[i]], 1, true)[1][1]
         χ_3D[idx] += fieldvec[i]      # μ = Σᵢ μᵢ / n
         σ²_3D[idx] += fieldvec[i]^2   # σ² = Σᵢ μᵢ² / n - μ²
         n_3D[idx] += 1

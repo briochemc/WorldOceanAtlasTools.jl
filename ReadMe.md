@@ -22,7 +22,7 @@
 </p>
 <p>
   <a href="https://travis-ci.com/briochemc/WorldOceanAtlasTools.jl">
-    <img alt="Build Status" src="https://travis-ci.com/briochemc/WorldOceanAtlasTools.jl.svg?branch=master">
+    <img alt="Build Status" src="https://img.shields.io/travis/com/briochemc/WorldOceanAtlasTools.jl/master?label=OSX/Linux&logo=travis&logoColor=white">
   </a>
   <a href='https://coveralls.io/github/briochemc/WorldOceanAtlasTools.jl?branch=master'>
     <img src='https://coveralls.io/repos/github/briochemc/WorldOceanAtlasTools.jl/badge.svg?branch=master' alt='Coverage Status' />
@@ -30,7 +30,7 @@
 </p>
 <p>
   <a href="https://ci.appveyor.com/project/briochemc/WorldOceanAtlasTools-jl">
-    <img alt="Build Status" src="https://ci.appveyor.com/api/projects/status/76lcl30w1uxbirx2?svg=true">
+    <img alt="Build Status" src="https://img.shields.io/appveyor/ci/briochemc/WorldOceanAtlasTools-jl/master?label=Windows&logo=appveyor&logoColor=white">
   </a>
   <a href="https://codecov.io/gh/briochemc/WorldOceanAtlasTools.jl">
     <img src="https://codecov.io/gh/briochemc/WorldOceanAtlasTools.jl/branch/master/graph/badge.svg" />

@@ -11,7 +11,7 @@ Resolution is either "5°", "1°", or "0.25°".
 (1° most likely to work.)
 Fields are "mean" or "objectively analyzed climatology".
 (mean most likely to work.)
-Note WOA's nomenclature should work too, e.g., 
+Note WOA's nomenclature should work too, e.g.,
 "p" for "phosphate", "mn" for "mean", and so on.
 """
 function get_3D_field(product_year, tracer, period, resolution, field)
@@ -134,11 +134,16 @@ Helper functions
 ==================================#
 
 function WOA_Dataset(product_year, tracer, period, resolution; verbose=false)
-    println("Registering WOA data with DataDeps")
+    println("Registering World Ocean Atlas data with DataDeps")
+    @warn """You are about to use World Ocean Atlas data.
+          Please cite the following corresponding reference(s):
+
+          $(citation(product_year, tracer)))
+          """
     verbose && print(": ", url_WOA_THREDDS(product_year, tracer, period, resolution))
     register_WOA(product_year, tracer, period, resolution)
     ddstr = @datadep_str string(my_DataDeps_name(product_year, tracer, period, resolution),
-                        "/", 
+                        "/",
                         WOA_NetCDF_filename(product_year, tracer, period, resolution))
     Dataset(ddstr)
 end

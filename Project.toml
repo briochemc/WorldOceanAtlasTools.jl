@@ -1,7 +1,7 @@
 name = "WorldOceanAtlasTools"
 uuid = "04f20302-f1b9-11e8-29d9-7d841cb0a64a"
 authors = ["Benoit Pasquier <pasquieb@uci.edu>"]
-version = "0.3.2"
+version = "0.3.3"
 
 [deps]
 DataDeps = "124859b0-ceae-595e-8997-d05f6a7a8dfe"

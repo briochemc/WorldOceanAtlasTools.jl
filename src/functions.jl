@@ -86,6 +86,19 @@ end
 get_unit(ds, tracer, field) = convert_to_Unitful(ds[WOA_varname(tracer, field)].attrib["units"])
 
 function mean_and_variance_gridded_3d_field(grid::OceanGrid, field3D, lat, lon, depth)
+    χ_3D, σ²_3D, n_3D = raw_mean_and_variance_gridded_3d_field(grid, field3D, lat, lon, depth)
+    # Enforce μ = 0 and σ = ∞ where no observations
+    # (Instead of NaNs)
+    println("  Setting μ = 0 and σ² = ∞ where no obs")
+    χ_3D[findall(n_3D .== 0)] .= 0.0
+    σ²_3D[findall(n_3D .== 0)] .= Inf
+    println("  Setting a realistic minimum for σ²")
+    meanχ = mean(χ_3D, weights(n_3D))
+    σ²_3D .= max.(σ²_3D, 1e-4meanχ^2)
+    return χ_3D, σ²_3D
+end
+
+function raw_mean_and_variance_gridded_3d_field(grid::OceanGrid, field3D, lat, lon, depth)
     fieldvec, latvec, lonvec, depthvec, CI = filter_gridded_3D_field(field3D, lat, lon, depth)
     println("  Averaging data over each grid box")
     χ_3D = zeros(size(grid))
@@ -103,15 +116,7 @@ function mean_and_variance_gridded_3d_field(grid::OceanGrid, field3D, lat, lon, 
     end
     χ_3D .= χ_3D ./ n_3D               # μ = Σᵢ μᵢ / n
     σ²_3D .= σ²_3D ./ n_3D .- χ_3D.^2  # σ² = Σᵢ μᵢ² / n - μ²
-    # Enforce μ = 0 and σ = ∞ where no observations
-    # (Instead of NaNs)
-    println("  Setting μ = 0 and σ² = ∞ where no obs")
-    χ_3D[findall(n_3D .== 0)] .= 0.0
-    σ²_3D[findall(n_3D .== 0)] .= Inf
-    println("  Setting a realistic minimum for σ²")
-    meanχ = mean(χ_3D, weights(n_3D))
-    σ²_3D .= max.(σ²_3D, 1e-4meanχ^2)
-    return χ_3D, σ²_3D
+    return χ_3D, σ²_3D, n_3D 
 end
 
 function convert_to_SI_unit!(χ_3D, σ²_3D, ds, tracer, field)
@@ -127,6 +132,14 @@ function fit_to_grid(grid::OceanGrid, product_year, tracer, period, resolution, 
     χ_3D, σ²_3D = mean_and_variance_gridded_3d_field(grid, field3D, lat, lon, depth)
     convert_to_SI_unit!(χ_3D, σ²_3D, ds, tracer, field)
     return χ_3D, σ²_3D
+end
+
+function raw_to_grid(grid::OceanGrid, product_year, tracer, period, resolution, field)
+    ds = WOA_Dataset(product_year, tracer, period, resolution)
+    field3D, lat, lon, depth = get_gridded_3D_field(ds, tracer, field)
+    χ_3D, σ²_3D, n_3D = raw_mean_and_variance_gridded_3d_field(grid, field3D, lat, lon, depth)
+    convert_to_SI_unit!(χ_3D, σ²_3D, ds, tracer, field)
+    return χ_3D, n_3D
 end
 
 #==================================

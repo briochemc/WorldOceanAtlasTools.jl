@@ -31,11 +31,17 @@ function Base.show(io::IO, m::MIME"text/plain", o::Observations{A,B}) where {A,B
 end
 
 preshowobs(::Nothing) = println("Observations")
-preshowobs(MD) = println("Observations of $(MD.name) (with metadata)")
+function preshowobs(MD)
+    if haskey(MD, :unit)
+        println("Observations of $(MD.name) [$(MD.unit)] (with metadata)")
+    else
+        println("Observations of $(MD.name) (with metadata)")
+    end
+end
 
 Base.:*(o::Observations, q::Quantity) = Observations(o.values .* q, o.metadata)
 Base.:*(q::Quantity, o::Observations) = o * q
 Unitful.upreferred(o::Observations) = Observations(upreferred.(o.values), o.metadata)
-Unitful.ustrip(o::Observations) = Observations(ustrip.(o.values), o.metadata)
+Unitful.ustrip(o::Observations) = Observations(ustrip.(o.values), (o.metadata..., unit=unit(eltype(o))))
 
 export Observations

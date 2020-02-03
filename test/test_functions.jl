@@ -42,6 +42,11 @@
         @test b isa Array{Float64, 3}
         @test size(b) == size(grid)
         I = findall(a .≠ 0)
-        @test 1e-3 < sum(a[I]) / length(I) < 3e-3 # mean PO₄ ≈ 2e-3 mol m⁻³
+    end
+    # new functionality
+    @testset "Observations" begin
+        σSW = 1.035u"kg/L" # approximate mean sea water density to convert mol/kg to mol/m^3
+        PO₄obs = WorldOceanAtlasTools.Observations(tracer) * σSW
+        @test 0.1u"μM" < mean(PO₄obs) < 10u"μM"
     end
 end

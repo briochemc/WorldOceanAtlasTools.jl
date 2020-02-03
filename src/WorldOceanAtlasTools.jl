@@ -1,6 +1,6 @@
 module WorldOceanAtlasTools
 
-using DataDeps, NCDatasets, Match, StatsBase, Unitful
+using DataDeps, NCDatasets, Match, Statistics, StatsBase, Unitful
 using OceanGrids, NearestNeighbors
 
 include("types.jl")

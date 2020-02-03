@@ -2,6 +2,7 @@
 using Test, WorldOceanAtlasTools
 using NCDatasets
 using OceanGrids, Unitful
+using Statistics
 
 # Alias for short name
 WOA = WorldOceanAtlasTools

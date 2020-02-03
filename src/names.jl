@@ -93,13 +93,13 @@ end
 my_varname(tracer) = @match tracer begin
     "t" || "T" || "Temperature" || "temperature" || "Temp" || "temp"                   => "Temp"
     "s" || "Salinity" || "salinity" || "Salt" || "salt"                                => "Salt"
-    "I" || "Density" || "density" || "Dens" || "dens"                                  => "Dens"
-    "o" || "O2" || "Oxygen" || "oxygen"  || "Dissolved oxygen"                         => "O2"
-    "O" || "o2sat" || "O2sat" || "O2Sat" || "oxygen saturation" || "Oxygen saturation" => "O2sat"
+    "I" || "Density" || "density" || "Dens" || "dens" || "σ"                           => "Dens"
+    "o" || "O2" || "O₂" || "Oxygen" || "oxygen"  || "Dissolved oxygen"                 => "O2"
+    "O" || "o2sat" || "O₂sat" || "O2sat" || "O2Sat" || "oxygen saturation" || "Oxygen saturation" => "O2sat"
     "A" || "AOU" || "Apparent oxygen utilization"                                      => "AOU"
     "i" || "silicate" || "DSi" || "Silicic Acid" || "Si(OH)4" || "SiOH4" || "sioh4"    => "DSi"
-    "p" || "phosphate" || "PO4" || "Phosphate" || "DIP" || "po4"                       => "DIP"
-    "n" || "nitrate" || "NO3" || "Nitrate" || "DIN" || "no3"                           => "DIN"
+    "p" || "phosphate" || "PO4" || "Phosphate" || "DIP" || "po4" || "PO₄"              => "DIP"
+    "n" || "nitrate" || "NO3" || "Nitrate" || "DIN" || "no3" || "NO₃"                  => "DIN"
     "C" || "conductivity" || "Conductivity" || "Cond" || "cond"                        => "Cond"
     _ => error(incorrect_varname(tracer))
 end
@@ -290,3 +290,15 @@ url_DATA(product_year) = @match my_product_year(product_year) begin
     "18" => "DATA"
 end
 
+
+
+"""
+    varname(tracer)
+
+Returns the World Ocean Data variable name that "matches" `tracer`.
+"""
+varname(tracer::String) = @match lowercase(tracer) begin
+    "lat" || "latitude"                                                   => "lat"
+    "lon" || "longitude"                                                  => "lon"
+    "depth" || "depths"                                                   => "depth"
+end

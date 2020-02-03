@@ -72,6 +72,9 @@ function mean_std_and_number_obs(ds, tracer)
                     )
 end
 
+
+
+
 function filter_gridded_3D_field(field3D, lat, lon, depth)
     # Find where there is data for both mean and std
     println("  Filtering data")
@@ -84,6 +87,11 @@ function filter_gridded_3D_field(field3D, lat, lon, depth)
 end
 
 get_unit(ds, tracer, field) = convert_to_Unitful(ds[WOA_varname(tracer, field)].attrib["units"])
+
+
+
+
+
 
 function mean_and_variance_gridded_3d_field(grid::OceanGrid, field3D, lat, lon, depth)
     χ_3D, σ²_3D, n_3D = raw_mean_and_variance_gridded_3d_field(grid, field3D, lat, lon, depth)
@@ -116,7 +124,7 @@ function raw_mean_and_variance_gridded_3d_field(grid::OceanGrid, field3D, lat, l
     end
     χ_3D .= χ_3D ./ n_3D               # μ = Σᵢ μᵢ / n
     σ²_3D .= σ²_3D ./ n_3D .- χ_3D.^2  # σ² = Σᵢ μᵢ² / n - μ²
-    return χ_3D, σ²_3D, n_3D 
+    return χ_3D, σ²_3D, n_3D
 end
 
 function convert_to_SI_unit!(χ_3D, σ²_3D, ds, tracer, field)
@@ -142,23 +150,85 @@ function raw_to_grid(grid::OceanGrid, product_year, tracer, period, resolution, 
     return χ_3D, n_3D
 end
 
+
+
+#==================================
+More general API functions
+==================================#
+# GEOTRACES.jl inspired functions.
+# Maybe faster that what I previously had.
+# Anyway it would be better to compare interpolated model to obs,
+# rather than interpolated obs to model.
+# So this is the format of obs I should use.
+# obs, MD
+# with obs and units
+# and MD a named tuple with fields Depth, Latitude, and Longitude
+# If MD is used a lot, maybe use depth, lat, lon?
+# TODO make this the basic API and let AIBECS use it
+# TODO push new version with new API
+function observations(ds::Dataset, tracer::String)
+    var, v, ikeep = indices_and_var(ds, tracer)
+    u = _unit(var)
+    return float.(v[ikeep]) .* u
+end
+observations(tracer) = Dataset(WOAfile(tracer=tracer), "r") do ds
+    observations(ds, tracer)
+end
+function metadata(ds::Dataset, tracer::String, metadatakeys=("lat", "lon", "depth"))
+    _, _, ikeep = indices_and_var(ds, tracer)
+    WOAmetadatakeys = varname.(metadatakeys)
+    metadata = [metadatakeyvaluepair(ds[k], ikeep) for k in WOAmetadatakeys]
+    namedmetadata = (; metadata...)
+    return namedmetadata
+end
+metadata(tracer::String, args...) = Dataset(WOAfile(tracer=tracer), "r") do ds
+    metadata(ds, tracer::String, args...)
+end
+metadatakeyvaluepair(v, idx) = @match name(v) begin
+    "lon"   => (:lon, float.(v.var[:][[i.I[1] for i in idx]]) * u"°")
+    "lat"   => (:lat, float.(v.var[:][[i.I[2] for i in idx]]) * u"°")
+    "depth" => (:depth, float.(v.var[:][[i.I[3] for i in idx]]) * u"m")
+end
+function indices_and_var(ds::Dataset, tracer::String)
+    var = ds[WOA_varname(tracer, "mn")]
+    FV = _fillvalue(var)
+    v = var.var[:][:,:,:,1]
+    ikeep = findall(v .≠ FV)
+    return var, v, ikeep
+end
+_unit(v) = convert_to_Unitful(get(v.attrib, "units", "nothing"))
+_fillvalue(v) = get(v.attrib, "_FillValue", NaN)
+function Observations(ds::Dataset, tracer::String; metadatakeys=("lat", "lon", "depth"))
+    var, v, ikeep = indices_and_var(ds, tracer)
+    u = _unit(var)
+    WOAmetadatakeys = varname.(metadatakeys)
+    metadata = [metadatakeyvaluepair(ds[k], ikeep) for k in WOAmetadatakeys]
+    MD = (; (:name => tracer), metadata...)
+    return Observations(float.(v[ikeep]) .* u, MD)
+end
+Observations(tracer; metadatakeys=("lat", "lon", "depth")) = Dataset(WOAfile(tracer=tracer), "r") do ds
+    Observations(ds, tracer, metadatakeys=metadatakeys)
+end
+
+
 #==================================
 Helper functions
 ==================================#
 
-function WOA_Dataset(product_year, tracer, period, resolution; verbose=false)
+function WOAfile(;tracer, product_year=2018, period=0, resolution="1")
     println("Registering World Ocean Atlas data with DataDeps")
     @warn """You are about to use World Ocean Atlas data.
           Please cite the following corresponding reference(s):
-
           $(citation(product_year, tracer)))
           """
-    verbose && print(": ", url_WOA_THREDDS(product_year, tracer, period, resolution))
     register_WOA(product_year, tracer, period, resolution)
-    ddstr = @datadep_str string(my_DataDeps_name(product_year, tracer, period, resolution),
+    return @datadep_str string(my_DataDeps_name(product_year, tracer, period, resolution),
                         "/",
                         WOA_NetCDF_filename(product_year, tracer, period, resolution))
-    Dataset(ddstr)
+end
+
+function WOA_Dataset(product_year, tracer, period, resolution)
+    Dataset(WOAfile(tracer=tracer, product_year=product_year, period=period, resolution=resolution))
 end
 
 function remove_DataDep(product_year, tracer, period, resolution)

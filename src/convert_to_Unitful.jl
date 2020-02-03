@@ -3,16 +3,16 @@
 
 Converts the string from WOA's `units` attribute to a Unitful.jl unit.
 """
-convert_to_Unitful(s) = UNITFUL_WOA[s]
+convert_to_Unitful(v::String) = @match v begin
+    "micromoles_per_liter"             => u"μmol/l"
+    "micromoles_per_kilogram"          => u"μmol/kg"
+    "percent"                          => u"percent"
+    "meters"                           => u"m"
+    "degrees_north"                    => u"°"
+    "degrees_east"                     => u"°"
+    _ => nothing
+end
 
-#=====================================
-Dictionary to translate
-units from WOA
-to units of Unitful
-=====================================#
 
-const UNITFUL_WOA = Dict(
-    "micromoles_per_liter"    => u"μmol/l",
-    "micromoles_per_kilogram" => u"1.025μmol/l", # 1 l ≈ 1.025 kg from ocean.ices.dk/Tools/UnitConversion.aspx
-    "percent" => u"percent"
-)
+
+

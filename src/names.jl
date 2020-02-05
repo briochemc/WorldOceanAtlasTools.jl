@@ -298,7 +298,7 @@ end
 Returns the World Ocean Data variable name that "matches" `tracer`.
 """
 varname(tracer::String) = @match lowercase(tracer) begin
-    "lat" || "latitude"                                                   => "lat"
-    "lon" || "longitude"                                                  => "lon"
-    "depth" || "depths"                                                   => "depth"
+    "lat" || "latitude"   => "lat"
+    "lon" || "longitude"  => "lon"
+    "depth" || "depths"   => "depth"
 end

@@ -75,6 +75,10 @@ end
 
 
 
+
+
+
+
 function filter_gridded_3D_field(field3D, lat, lon, depth)
     # Find where there is data for both mean and std
     println("  Filtering data")
@@ -166,29 +170,37 @@ More general API functions
 # If MD is used a lot, maybe use depth, lat, lon?
 # TODO make this the basic API and let AIBECS use it
 # TODO push new version with new API
-function observations(ds::Dataset, tracer::String)
+
+
+
+using MetadataArrays
+
+
+function observations(ds::Dataset, tracer::String; metadatakeys)
     var, v, ikeep = indices_and_var(ds, tracer)
     u = _unit(var)
-    return float.(v[ikeep]) .* u
-end
-observations(tracer) = Dataset(WOAfile(tracer=tracer), "r") do ds
-    observations(ds, tracer)
-end
-function metadata(ds::Dataset, tracer::String, metadatakeys=("lat", "lon", "depth"))
-    _, _, ikeep = indices_and_var(ds, tracer)
     WOAmetadatakeys = varname.(metadatakeys)
     metadata = [metadatakeyvaluepair(ds[k], ikeep) for k in WOAmetadatakeys]
-    namedmetadata = (; metadata...)
-    return namedmetadata
+    metadata = (name="Observed $(WOA_path_varname(tracer))", WOAvarname=name(var), metadata...)
+    return MetadataVector(float.(v[ikeep]) .* u, metadata)
 end
-metadata(tracer::String, args...) = Dataset(WOAfile(tracer=tracer), "r") do ds
-    metadata(ds, tracer::String, args...)
+"""
+    observations(tracer::String; metadatakeys=("lat", "lon", "depth"))
+
+Returns observations of `tracer` with its metadata.
+
+### Example
+
+```
+obs = observations("po4")
+```
+"""
+function observations(tracer::String; metadatakeys=("lat", "lon", "depth"))
+    return Dataset(WOAfile(tracer=tracer), "r") do ds
+        observations(ds, tracer, metadatakeys=metadatakeys)
+    end
 end
-metadatakeyvaluepair(v, idx) = @match name(v) begin
-    "lon"   => (:lon, float.(v.var[:][[i.I[1] for i in idx]]) * u"°")
-    "lat"   => (:lat, float.(v.var[:][[i.I[2] for i in idx]]) * u"°")
-    "depth" => (:depth, float.(v.var[:][[i.I[3] for i in idx]]) * u"m")
-end
+
 function indices_and_var(ds::Dataset, tracer::String)
     var = ds[WOA_varname(tracer, "mn")]
     FV = _fillvalue(var)
@@ -198,17 +210,12 @@ function indices_and_var(ds::Dataset, tracer::String)
 end
 _unit(v) = convert_to_Unitful(get(v.attrib, "units", "nothing"))
 _fillvalue(v) = get(v.attrib, "_FillValue", NaN)
-function Observations(ds::Dataset, tracer::String; metadatakeys=("lat", "lon", "depth"))
-    var, v, ikeep = indices_and_var(ds, tracer)
-    u = _unit(var)
-    WOAmetadatakeys = varname.(metadatakeys)
-    metadata = [metadatakeyvaluepair(ds[k], ikeep) for k in WOAmetadatakeys]
-    MD = (; (:name => tracer), metadata...)
-    return Observations(float.(v[ikeep]) .* u, MD)
+metadatakeyvaluepair(v, idx) = @match name(v) begin
+    "lon"   => (:lon, float.(v.var[:][[i.I[1] for i in idx]]) * u"°")
+    "lat"   => (:lat, float.(v.var[:][[i.I[2] for i in idx]]) * u"°")
+    "depth" => (:depth, float.(v.var[:][[i.I[3] for i in idx]]) * u"m")
 end
-Observations(tracer; metadatakeys=("lat", "lon", "depth")) = Dataset(WOAfile(tracer=tracer), "r") do ds
-    Observations(ds, tracer, metadatakeys=metadatakeys)
-end
+
 
 
 #==================================

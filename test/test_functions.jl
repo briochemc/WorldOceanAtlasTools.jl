@@ -44,9 +44,9 @@
         I = findall(a .≠ 0)
     end
     # new functionality
-    @testset "Observations" begin
+    @testset "observations function" begin
         σSW = 1.035u"kg/L" # approximate mean sea water density to convert mol/kg to mol/m^3
-        PO₄obs = WorldOceanAtlasTools.Observations(tracer) * σSW
+        PO₄obs = WorldOceanAtlasTools.observations(tracer) * σSW
         @test 0.1u"μM" < mean(PO₄obs) < 10u"μM"
     end
 end

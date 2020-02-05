@@ -3,7 +3,6 @@ module WorldOceanAtlasTools
 using DataDeps, NCDatasets, Match, Statistics, StatsBase, Unitful
 using OceanGrids, NearestNeighbors
 
-include("types.jl")
 include("names.jl")
 include("citations.jl")
 #include("interpolations.jl")

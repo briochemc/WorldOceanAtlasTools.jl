@@ -1,7 +1,7 @@
 name = "WorldOceanAtlasTools"
 uuid = "04f20302-f1b9-11e8-29d9-7d841cb0a64a"
 authors = ["Benoit Pasquier <pasquieb@uci.edu>"]
-version = "0.4.1"
+version = "0.4.2"
 
 [deps]
 DataDeps = "124859b0-ceae-595e-8997-d05f6a7a8dfe"
@@ -22,7 +22,7 @@ NCDatasets = "0.9"
 NearestNeighbors = "0.4"
 OceanGrids = "0.1"
 StatsBase = "0.32"
-Unitful = "0.18"
+Unitful = "1"
 julia = "1"
 
 [extras]

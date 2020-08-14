@@ -26,9 +26,21 @@ size(P3D)
 (36, 72, 43)
 ```
 
+Or nitrate:
+
+```jldoctest usage
+N3D = WorldOceanAtlasTools.get_3D_field(2018, "nitrate", "Feb", "5°", "mean")
+size(N3D)
+
+# output
+
+(36, 72, 43)
+```
+
+
 ## Fitting a 3D field from WOA to another grid
 
-TODO
+TODO: Actually write some documentation.
 
 ## Functions
 

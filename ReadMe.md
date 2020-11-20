@@ -5,6 +5,27 @@
 # World Ocean Atlas Tools
 
 <p>
+  <a href="https://github.com/briochemc/WorldOceanAtlasTools.jl/actions">
+    <img src="https://img.shields.io/github/workflow/status/briochemc/WorldOceanAtlasTools.jl/Mac%20OS%20X?label=OSX&logo=Apple&logoColor=white&style=flat-square">
+  </a>
+  <a href="https://github.com/briochemc/WorldOceanAtlasTools.jl/actions">
+    <img src="https://img.shields.io/github/workflow/status/briochemc/WorldOceanAtlasTools.jl/Linux?label=Linux&logo=Linux&logoColor=white&style=flat-square">
+  </a>
+  <a href="https://github.com/briochemc/WorldOceanAtlasTools.jl/actions">
+    <img src="https://img.shields.io/github/workflow/status/briochemc/WorldOceanAtlasTools.jl/Windows?label=Windows&logo=Windows&logoColor=white&style=flat-square">
+  </a>
+  <a href="https://codecov.io/gh/briochemc/WorldOceanAtlasTools.jl">
+    <img src="https://img.shields.io/codecov/c/github/briochemc/WorldOceanAtlasTools.jl/master?label=Codecov&logo=codecov&logoColor=white&style=flat-square">
+  </a>
+</p>
+
+<p>
+  <a href="https://briochemc.github.io/WorldOceanAtlasTools.jl/stable/">
+    <img src="https://img.shields.io/github/workflow/status/briochemc/WorldOceanAtlasTools.jl/Documentation?style=for-the-badge&label=Documentation&logo=Read%20the%20Docs&logoColor=white">
+  </a>
+</p>
+
+<p>
   <a href="https://doi.org/10.5281/zenodo.2677666">
     <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.2677666.svg" alt="DOI">
   </a>
@@ -12,30 +33,8 @@
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg">
   </a>
 </p>
-<p>
-  <a href="https://briochemc.github.io/WorldOceanAtlasTools.jl/stable/">
-    <img src=https://img.shields.io/badge/docs-stable-blue.svg>
-  </a>
-  <a href="https://briochemc.github.io/WorldOceanAtlasTools.jl/latest/">
-    <img src=https://img.shields.io/badge/docs-dev-blue.svg>
-  </a>
-</p>
-<p>
-  <a href="https://travis-ci.com/briochemc/WorldOceanAtlasTools.jl">
-    <img alt="Build Status" src="https://img.shields.io/travis/com/briochemc/WorldOceanAtlasTools.jl/master?label=OSX/Linux&logo=travis&logoColor=white">
-  </a>
-  <a href='https://coveralls.io/github/briochemc/WorldOceanAtlasTools.jl?branch=master'>
-    <img src='https://coveralls.io/repos/github/briochemc/WorldOceanAtlasTools.jl/badge.svg?branch=master' alt='Coverage Status' />
-  </a>
-</p>
-<p>
-  <a href="https://ci.appveyor.com/project/briochemc/WorldOceanAtlasTools-jl">
-    <img alt="Build Status" src="https://img.shields.io/appveyor/ci/briochemc/WorldOceanAtlasTools-jl/master?label=Windows&logo=appveyor&logoColor=white">
-  </a>
-  <a href="https://codecov.io/gh/briochemc/WorldOceanAtlasTools.jl">
-    <img src="https://codecov.io/gh/briochemc/WorldOceanAtlasTools.jl/branch/master/graph/badge.svg" />
-  </a>
-</p>
+
+
 
 
 [WorldOceanAtlasTools.jl](https://github.com/briochemc/WorldOceanAtlasTools.jl) was developed for the purpose of downloading and using data from the World Ocean Atlas (WOA) database to be used by the [AIBECS.jl](https://github.com/briochemc/AIBECS.jl) package.

@@ -10,6 +10,7 @@ convert_to_Unitful(v::String) = @match v begin
     "meters"                           => u"m"
     "degrees_north"                    => u"°"
     "degrees_east"                     => u"°"
+    "degrees_celsius"                  => u"°C"
     _ => nothing
 end
 

@@ -39,6 +39,11 @@ function get_gridded_3D_field(ds, tracer, field)
     field3D .= field3D[:, lon_reordering, :]
     return field3D, lat, lon, depth
 end
+function get_gridded_3D_field(tracer, field; kwargs...)
+    return Dataset(WOAfile(tracer=tracer; kwargs...), "r") do ds
+        get_gridded_3D_field(ds, tracer, field)
+    end
+end
 
 """
     mean_std_and_number_obs(ds, tracer)
@@ -195,8 +200,8 @@ Returns observations of `tracer` with its metadata.
 obs = observations("po4")
 ```
 """
-function observations(tracer::String; metadatakeys=("lat", "lon", "depth"))
-    return Dataset(WOAfile(tracer=tracer), "r") do ds
+function observations(tracer::String; metadatakeys=("lat", "lon", "depth"), kwargs...)
+    return Dataset(WOAfile(tracer=tracer; kwargs...), "r") do ds
         observations(ds, tracer, metadatakeys=metadatakeys)
     end
 end

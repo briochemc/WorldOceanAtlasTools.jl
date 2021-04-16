@@ -233,8 +233,8 @@ WOA_decade(tracer) = @match my_varname(tracer) begin
 end
 
 WOA_v2(tracer) = @match my_varname(tracer) begin
-    "Salt" || "Temp" => "v2"
-    "Dens" || "Cond" || "O2" || "O2sat" || "AOU" || "DSi" || "DIP" || "DIN" => ""
+    "Salt" => "v2"
+    "Dens" || "Temp" || "Cond" || "O2" || "O2sat" || "AOU" || "DSi" || "DIP" || "DIN" => ""
     _ => error(incorrect_varname(tracer))
 end
 

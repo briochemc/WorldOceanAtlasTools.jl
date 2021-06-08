@@ -1,12 +1,13 @@
 name = "WorldOceanAtlasTools"
 uuid = "04f20302-f1b9-11e8-29d9-7d841cb0a64a"
 authors = ["Benoit Pasquier <briochemc@gmail.com>"]
-version = "0.4.4"
+version = "0.5.0"
 
 [deps]
 DataDeps = "124859b0-ceae-595e-8997-d05f6a7a8dfe"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 Match = "7eb4fadd-790c-5f42-8a69-bfa0b872bfbf"
-MetadataArrays = "49441bc9-da82-574f-b07c-a0d10dd4ac13"
 NCDatasets = "85f8d34a-cbdd-5861-8df4-14fed0d494ab"
 NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
 OceanGrids = "cfe838f4-859f-11e9-2ea1-df7d4e7c3537"
@@ -16,11 +17,11 @@ Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
 DataDeps = "0.7"
+DataFrames = "1"
 Match = "1"
-MetadataArrays = "0.1"
 NCDatasets = "0.9, 0.10, 0.11"
 NearestNeighbors = "0.4"
-OceanGrids = "0.1, 0.2, 0.3"
+OceanGrids = "0.1, 0.2, 0.3, 0.4"
 StatsBase = "0.33"
 Unitful = "1"
 julia = "1"

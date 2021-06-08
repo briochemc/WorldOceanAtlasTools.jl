@@ -161,33 +161,19 @@ end
 
 
 
-#==================================
-More general API functions
-==================================#
-# GEOTRACES.jl inspired functions.
-# Maybe faster that what I previously had.
-# Anyway it would be better to compare interpolated model to obs,
-# rather than interpolated obs to model.
-# So this is the format of obs I should use.
-# obs, MD
-# with obs and units
-# and MD a named tuple with fields Depth, Latitude, and Longitude
-# If MD is used a lot, maybe use depth, lat, lon?
-# TODO make this the basic API and let AIBECS use it
-# TODO push new version with new API
+#=========================================
+observations function returns a DataFrames
+=========================================#
 
-
-
-using MetadataArrays
 
 
 function observations(ds::Dataset, tracer::String; metadatakeys)
     var, v, ikeep = indices_and_var(ds, tracer)
     u = _unit(var)
     WOAmetadatakeys = varname.(metadatakeys)
-    metadata = [metadatakeyvaluepair(ds[k], ikeep) for k in WOAmetadatakeys]
-    metadata = (name="Observed $(WOA_path_varname(tracer))", WOAvarname=name(var), metadata...)
-    return MetadataVector(float.(v[ikeep]) .* u, metadata)
+    metadata = (metadatakeyvaluepair(ds[k], ikeep) for k in WOAmetadatakeys)
+    df = DataFrame(metadata..., Symbol(tracer)=>float.(view(v, ikeep))*u)
+    return df
 end
 """
     observations(tracer::String; metadatakeys=("lat", "lon", "depth"))
@@ -216,9 +202,9 @@ end
 _unit(v) = convert_to_Unitful(get(v.attrib, "units", "nothing"))
 _fillvalue(v) = get(v.attrib, "_FillValue", NaN)
 metadatakeyvaluepair(v, idx) = @match name(v) begin
-    "lon"   => (:lon, float.(v.var[:][[i.I[1] for i in idx]]) * u"°")
-    "lat"   => (:lat, float.(v.var[:][[i.I[2] for i in idx]]) * u"°")
-    "depth" => (:depth, float.(v.var[:][[i.I[3] for i in idx]]) * u"m")
+    "lon"   => (:lon => float.(v.var[:][[i.I[1] for i in idx]]))
+    "lat"   => (:lat => float.(v.var[:][[i.I[2] for i in idx]]))
+    "depth" => (:depth => float.(v.var[:][[i.I[3] for i in idx]]) * u"m")
 end
 
 

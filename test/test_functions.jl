@@ -54,7 +54,8 @@
     # new functionality
     @testset "observations function" begin
         σSW = 1.035u"kg/L" # approximate mean sea water density to convert mol/kg to mol/m^3
-        PO₄obs = WorldOceanAtlasTools.observations(tracer) * σSW
-        @test 0.1u"μM" < mean(PO₄obs) < 10u"μM"
+        obs = WorldOceanAtlasTools.observations(tracer)
+        obs.value = obs.p .* σSW .|> u"μM"
+        @test 0.1u"μM" < mean(obs.value) < 10u"μM"
     end
 end

@@ -1,7 +1,15 @@
 module WorldOceanAtlasTools
 
-using DataDeps, NCDatasets, Match, Statistics, StatsBase, Unitful
-using OceanGrids, NearestNeighbors
+using DataDeps
+using Downloads
+using NCDatasets
+using DataFrames
+using Match
+using Statistics
+using StatsBase
+using Unitful
+using OceanGrids
+using NearestNeighbors
 
 include("names.jl")
 include("citations.jl")

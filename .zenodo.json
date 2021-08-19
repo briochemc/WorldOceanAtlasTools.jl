@@ -1,0 +1,28 @@
+{
+    "language": "eng",
+    "license": "MIT",
+    "upload_type": "software",
+    "title": "WorldOceanAtlasTools.jl: Download and process World Ocean Data in Julia",
+    "creators": [
+        {
+            "orcid": "0000-0002-3838-5976",
+            "affiliation": "previously UCI, now at USC",
+            "name": "Benoit Pasquier"
+        }
+    ],
+    "keywords": [
+        "julia",
+        "model",
+        "observations",
+        "WOA",
+        "World Ocean Atlas",
+        "Nutrients",
+        "transport",
+        "oceanography",
+        "global",
+        "tracer",
+        "biogeochemical-model",
+        "ocean-circulation",
+        "marine-tracer"
+    ]
+}

@@ -145,9 +145,7 @@ julia> PO4obs = vectorize(μPO43D, grd) # rearrange as a vector of wet-box value
 
 ## Reference (function docstrings)
 
-```@docs
-get_3D_field
-get_gridded_3D_field
-fit_to_grid
-observations
+```@autodocs
+Modules = [WorldOceanAtlasTools]
+Order   = [:function, :type]
 ```

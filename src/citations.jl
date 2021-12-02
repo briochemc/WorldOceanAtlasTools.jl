@@ -1,10 +1,13 @@
-citation(tracer; product_year=2018) = @match my_varname(tracer) begin
-    "DSi" || "DIP" || "DIN" => citation_Nutrients(product_year)
-    "Temp" => citation_Temperature(product_year)
-    "Salt" => citation_Salinity(product_year)
-    "O2" || "O2sat" || "AOU" => citation_Oxygen(product_year)
-    "Dens" || "Cond" => citation(product_year)
-    _ => error("Not sure what you are trying to cite.")
+function citation(tracer; product_year=2018)
+    yr_str = my_product_year(product_year)
+    @match my_varname(tracer) begin
+        "DSi" || "DIP" || "DIN" => citation_Nutrients(yr_str)
+        "Temp" => citation_Temperature(yr_str)
+        "Salt" => citation_Salinity(yr_str)
+        "O2" || "O2sat" || "AOU" => citation_Oxygen(yr_str)
+        "Dens" || "Cond" => citation(yr_str)
+        _ => error("Not sure what you are trying to cite.")
+    end
 end
 
 citation(product_year) = @match my_product_year(product_year) begin

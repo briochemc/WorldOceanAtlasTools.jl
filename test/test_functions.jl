@@ -14,12 +14,12 @@
         @test size(field3D) == (36, 72, 102)
     end
     @testset "Citations erroring" begin
-        @test_broken citation(2000, "What?")
-        @test_broken citation(2000)
-        @test_broken citation_Temperature(2000)
-        @test_broken citation_Salinity(2000)
-        @test_broken citation_Oxygen(2000)
-        @test_broken citation_Nutrients(2000)
+        @test_broken citation("What?", product_year=2000)
+        @test_broken citation(product_year=2000)
+        @test_broken citation_Temperature(product_year=2000)
+        @test_broken citation_Salinity(product_year=2000)
+        @test_broken citation_Oxygen(product_year=2000)
+        @test_broken citation_Nutrients(product_year=2000)
     end
     @testset "get_gridded_3D_field" begin
         field3D, lat, lon, depth = WOA.get_gridded_3D_field(ds, tracer, field)

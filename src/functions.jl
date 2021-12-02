@@ -143,6 +143,12 @@ function convert_to_SI_unit!(χ_3D, σ²_3D, ds, tracer, field)
     σ²_3D .*= ustrip(upreferred(1.0χ_unit^2))
 end
 
+
+"""
+    fit_to_grid(grid, product_year, tracer, period, resolution, field)
+
+Returns `χ_3D`, `σ²_3D` of "regridded" WOA data using a nearest neighbor approach.
+"""
 function fit_to_grid(grid::OceanGrid, product_year, tracer, period, resolution, field)
     ds = WOA_Dataset(product_year, tracer, period, resolution)
     field3D, lat, lon, depth = get_gridded_3D_field(ds, tracer, field)

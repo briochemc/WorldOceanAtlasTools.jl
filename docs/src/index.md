@@ -45,5 +45,8 @@ TODO: Actually write some documentation.
 ## Functions
 
 ```@docs
-get_3D_field(product_year, tracer, period, resolution, field)
+get_3D_field
+get_gridded_3D_field
+fit_to_grid
+observations
 ```

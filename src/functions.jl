@@ -1,22 +1,21 @@
 
 """
-    get_3D_field(product_year, tracer, period, resolution, field)
+    get_3D_field(tracer; product_year=2018, period=0, resolution=1, field="an")
 
 Downloads and returns the 3D field of a tracer from the World Ocean Atlas.
 
-Availabe product years are 2009, 2013, and 2018.
-(2018 more likely to work.)
 Tracers are either "phosphate", "nitrate", or "silicate".
-Resolution is either "5°", "1°", or "0.25°".
-(1° most likely to work.)
-Fields are "mean" or "objectively analyzed climatology".
-(mean most likely to work.)
-Note WOA's nomenclature should work too, e.g.,
+Availabe product years are 2009, 2013, and 2018 (default: 2018).
+Resolution is either "5°", "1°", or "0.25°" (default: 1°).
+Fields are "mean" or "an" (for objectively analyzed climatology).
+(default = "an".)
+
+Note that WOA's nomenclature should work too, e.g.,
 "p" for "phosphate", "mn" for "mean", and so on.
 """
-function get_3D_field(product_year, tracer, period, resolution, field)
+function get_3D_field(tracer; product_year=2018, period=0, resolution=1, field="an")
     println("Getting the 3D field of WOA$(my_product_year(product_year)) $(my_averaging_period(period)) $(WOA_path_varname(tracer)) $(surface_grid_size(resolution)) data")
-    ds = WOA_Dataset(product_year, tracer, period, resolution)
+    ds = WOA_Dataset(tracer; product_year, period, resolution)
     field3D = ds[WOA_varname(tracer, field)][:][:, :, :, 1]
     println("  Rearranging data")
     field3D = permutedims(field3D, [2 1 3])
@@ -143,16 +142,22 @@ function convert_to_SI_unit!(χ_3D, σ²_3D, ds, tracer, field)
     σ²_3D .*= ustrip(upreferred(1.0χ_unit^2))
 end
 
-function fit_to_grid(grid::OceanGrid, product_year, tracer, period, resolution, field)
-    ds = WOA_Dataset(product_year, tracer, period, resolution)
+
+"""
+    fit_to_grid(grid, tracer; product_year=2018, period=0, resolution=1, field="an")
+
+Returns `χ_3D`, `σ²_3D` of "regridded" WOA data using a nearest neighbor approach.
+"""
+function fit_to_grid(grid::OceanGrid, tracer; product_year=2018, period=0, resolution=1, field="an")
+    ds = WOA_Dataset(tracer; product_year, period, resolution)
     field3D, lat, lon, depth = get_gridded_3D_field(ds, tracer, field)
     χ_3D, σ²_3D = mean_and_variance_gridded_3d_field(grid, field3D, lat, lon, depth)
     convert_to_SI_unit!(χ_3D, σ²_3D, ds, tracer, field)
     return χ_3D, σ²_3D
 end
 
-function raw_to_grid(grid::OceanGrid, product_year, tracer, period, resolution, field)
-    ds = WOA_Dataset(product_year, tracer, period, resolution)
+function raw_to_grid(grid::OceanGrid, tracer; product_year=2018, period=0, resolution=1, field="an")
+    ds = WOA_Dataset(tracer; product_year, period, resolution)
     field3D, lat, lon, depth = get_gridded_3D_field(ds, tracer, field)
     χ_3D, σ²_3D, n_3D = raw_mean_and_variance_gridded_3d_field(grid, field3D, lat, lon, depth)
     convert_to_SI_unit!(χ_3D, σ²_3D, ds, tracer, field)
@@ -167,7 +172,7 @@ observations function returns a DataFrames
 
 
 
-function observations(ds::Dataset, tracer::String; metadatakeys)
+function observations(ds::Dataset, tracer::String; metadatakeys=("lat", "lon", "depth"))
     var, v, ikeep = indices_and_var(ds, tracer)
     u = _unit(var)
     WOAmetadatakeys = varname.(metadatakeys)
@@ -187,8 +192,8 @@ obs = observations("po4")
 ```
 """
 function observations(tracer::String; metadatakeys=("lat", "lon", "depth"), kwargs...)
-    return Dataset(WOAfile(tracer=tracer; kwargs...), "r") do ds
-        observations(ds, tracer, metadatakeys=metadatakeys)
+    return Dataset(WOAfile(tracer; kwargs...), "r") do ds
+        observations(ds, tracer; metadatakeys)
     end
 end
 
@@ -213,25 +218,26 @@ end
 Helper functions
 ==================================#
 
-function WOAfile(;tracer, product_year=2018, period=0, resolution="1")
+function WOAfile(tracer; product_year=2018, period=0, resolution="1")
     println("Registering World Ocean Atlas data with DataDeps")
-    @warn """You are about to use World Ocean Atlas data.
+    @warn """You are about to use World Ocean Atlas data $(my_product_year(product_year)).
+
           Please cite the following corresponding reference(s):
-          $(citation(product_year, tracer)))
+          $(citation(tracer; product_year)))
           """
-    register_WOA(product_year, tracer, period, resolution)
-    return @datadep_str string(my_DataDeps_name(product_year, tracer, period, resolution),
+    register_WOA(tracer; product_year, period, resolution)
+    return @datadep_str string(my_DataDeps_name(tracer; product_year, period, resolution),
                         "/",
-                        WOA_NetCDF_filename(product_year, tracer, period, resolution))
+                        WOA_NetCDF_filename(tracer; product_year, period, resolution))
 end
 
-function WOA_Dataset(product_year, tracer, period, resolution)
-    Dataset(WOAfile(tracer=tracer, product_year=product_year, period=period, resolution=resolution))
+function WOA_Dataset(tracer; product_year=2018, period=0, resolution=1)
+    Dataset(WOAfile(tracer; product_year, period, resolution))
 end
 
-function remove_DataDep(product_year, tracer, period, resolution)
+function remove_DataDep(tracer; product_year=2018, period=0, resolution=1)
     println("Removing WOA$(my_product_year(product_year)) $(my_averaging_period(period)) $(WOA_path_varname(tracer)) $(surface_grid_size(resolution)) data")
-    nc_file = @datadep_str string(my_DataDeps_name(product_year, tracer, period, resolution), "/", WOA_NetCDF_filename(product_year, tracer, period, resolution))
+    nc_file = @datadep_str string(my_DataDeps_name(tracer; product_year, period, resolution), "/", WOA_NetCDF_filename(tracer; product_year, period, resolution))
     rm(nc_file; recursive=true, force=true)
 end
 

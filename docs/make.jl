@@ -8,4 +8,5 @@ makedocs(
 
 deploydocs(
     repo = "github.com/briochemc/WorldOceanAtlasTools.jl.git",
+    push_preview = true
 )

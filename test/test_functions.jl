@@ -6,20 +6,20 @@
     period = 0 # Annual, 1 month and 1 season — no need to test every month and season
     resolution = "5°"
     field = "mn"
-    ds = WOA.WOA_Dataset(product_year, tracer, period, resolution)
+    ds = WOA.WOA_Dataset(tracer; product_year, period, resolution)
     @test ds isa Dataset
     @testset "get_3D_field" begin
-        field3D = WOA.get_3D_field(product_year, tracer, period, resolution, field)
+        field3D = WOA.get_3D_field(tracer; product_year, period, resolution, field)
         @test field3D isa Array{Union{Float32, Missing},3}
         @test size(field3D) == (36, 72, 102)
     end
     @testset "Citations erroring" begin
-        @test_broken citation(2000, "What?")
-        @test_broken citation(2000)
-        @test_broken citation_Temperature(2000)
-        @test_broken citation_Salinity(2000)
-        @test_broken citation_Oxygen(2000)
-        @test_broken citation_Nutrients(2000)
+        @test_broken citation("What?", product_year=2000)
+        @test_broken citation(product_year=2000)
+        @test_broken citation_Temperature(product_year=2000)
+        @test_broken citation_Salinity(product_year=2000)
+        @test_broken citation_Oxygen(product_year=2000)
+        @test_broken citation_Nutrients(product_year=2000)
     end
     @testset "get_gridded_3D_field" begin
         field3D, lat, lon, depth = WOA.get_gridded_3D_field(ds, tracer, field)
@@ -42,7 +42,7 @@
     end
     @testset "fit_to_grid" begin
         grid = OceanGrid(90,180,24)
-        a, b = WOA.fit_to_grid(grid, product_year, tracer, period, resolution, field)
+        a, b = WOA.fit_to_grid(grid, tracer; product_year, period, resolution, field)
         println(typeof(a))
         println(typeof(b))
         @test a isa Array{Float64, 3}

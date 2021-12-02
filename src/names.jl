@@ -12,15 +12,15 @@ function fallback_download(remotepath, localdir)
 end
 
 """
-    register_WOA(product_year, tracer, period, resolution)
+    register_WOA(tracer; product_year=2018, period=0, resolution=1)
 
 Registers a `datadep` for the variable `tracer` averaged over `period` at resolution `resolution`.
 """
-function register_WOA(product_year, tracer, period, resolution)
+function register_WOA(tracer; product_year=2018, period=0, resolution=1)
     register(DataDep(
-        my_DataDeps_name(product_year, tracer, period, resolution),
-        string(citation(product_year, tracer)),
-        url_WOA(product_year, tracer, period, resolution),
+        my_DataDeps_name(tracer; product_year, period, resolution),
+        string(citation(tracer; product_year)),
+        url_WOA(tracer; product_year, period, resolution),
         sha2_256,
         fetch_method = fallback_download
     ))
@@ -30,7 +30,7 @@ end
 #============================================================
 DataDeps registering name
 ============================================================#
-my_DataDeps_name(product_year, tracer, period, resolution) = string(
+my_DataDeps_name(tracer; product_year=2018, period=0, resolution=1) = string(
     "WOA",
     my_product_year(product_year), "_",
     my_averaging_period(period), "_",
@@ -212,9 +212,9 @@ surface_grid_size(resolution) = @match my_resolution(resolution) begin
     "5°"    => "73x36"
 end
 my_resolution(resolution) = @match resolution begin
-    "0.25°×0.25°" || "04" || "0.25d" || "0.25" || "0.25°" => "0.25°"
-       "1°×1°"    || "01" || "1d"    || "1"    || "1°"    => "1°"
-       "5°×5°"    || "05" || "5d"    || "5"    || "5°"    => "5°"
+    "0.25°×0.25°" || "04" || "0.25d" || "0.25" || "0.25°" || 0.25 => "0.25°"
+       "1°×1°"    || "01" || "1d"    || "1"    || "1°"    || 1    => "1°"
+       "5°×5°"    || "05" || "5d"    || "5"    || "5°"    || 5    => "5°"
     _ => error(incorrect_resolution(resolution))
 end
 WOA09_file_resolution(resolution) = @match my_resolution(resolution) begin
@@ -241,7 +241,7 @@ end
 #============================================================
 NetCDF file name
 ============================================================#
-function WOA_NetCDF_filename(product_year, tracer, period, resolution)
+function WOA_NetCDF_filename(tracer; product_year=2018, period=0, resolution=1)
     return string("woa",
                   my_product_year(product_year), "_",
                   WOA_decade(tracer), "_",
@@ -255,7 +255,7 @@ end
 URLs
 ============================================================#
 """
-    url_WOA(product_year, tracer, period, resolution)
+    url_WOA(tracer; product_year=2018, period=0, resolution=1)
 
 Returns the URL (`String`) for the NetCDF file of the World Ocean Atlas.
 This URL `String` typically looks like
@@ -263,13 +263,13 @@ This URL `String` typically looks like
     "https://data.nodc.noaa.gov/woa/WOA13/DATAv2/phosphate/netcdf/all/1.00/woa13_all_p00_01.nc"
     ```
 """
-url_WOA(product_year, tracer, period, resolution) = string("https://data.nodc.noaa.gov/woa/WOA",
+url_WOA(tracer; product_year=2018, period=0, resolution=1) = string("https://data.nodc.noaa.gov/woa/WOA",
                                    my_product_year(product_year), "/",
                                    url_DATA(product_year), "/",
                                    WOA_path_varname(tracer), "/netcdf/",
                                    WOA_decade(tracer), "/",
                                    WOA_path_resolution(resolution), "/",
-                                   WOA_NetCDF_filename(product_year, tracer, period, resolution))
+                                   WOA_NetCDF_filename(tracer; product_year, period, resolution))
 url_WOA_THREDDS_18(tracer, period, resolution) = string("https://data.nodc.noaa.gov/thredds/dodsC/ncei/woa/",
                                         WOA_path_varname(tracer), "/",
                                         WOA_decade(tracer), "/",
@@ -279,7 +279,7 @@ url_WOA_THREDDS_09(tracer, period, resolution) = string("https://data.nodc.noaa.
                                         WOA_path_varname(tracer), "_",
                                         seasonal_annual_monthly(period), "_",
                                         WOA09_file_resolution(resolution), ".nc")
-url_WOA_THREDDS(product_year, tracer, period, resolution) = @match my_product_year(product_year) begin
+url_WOA_THREDDS(tracer; product_year=2018, period=0, resolution=1) = @match my_product_year(product_year) begin
     "18" => url_WOA_THREDDS_18(tracer, period, resolution)
     "09" => url_WOA_THREDDS_09(tracer, period, resolution)
     _ => "No THREDDS links for year $product_year"

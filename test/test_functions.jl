@@ -6,10 +6,10 @@
     period = 0 # Annual, 1 month and 1 season — no need to test every month and season
     resolution = "5°"
     field = "mn"
-    ds = WOA.WOA_Dataset(product_year, tracer, period, resolution)
+    ds = WOA.WOA_Dataset(tracer; product_year, period, resolution)
     @test ds isa Dataset
     @testset "get_3D_field" begin
-        field3D = WOA.get_3D_field(product_year, tracer, period, resolution, field)
+        field3D = WOA.get_3D_field(tracer; product_year, period, resolution, field)
         @test field3D isa Array{Union{Float32, Missing},3}
         @test size(field3D) == (36, 72, 102)
     end
@@ -42,7 +42,7 @@
     end
     @testset "fit_to_grid" begin
         grid = OceanGrid(90,180,24)
-        a, b = WOA.fit_to_grid(grid, product_year, tracer, period, resolution, field)
+        a, b = WOA.fit_to_grid(grid, tracer; product_year, period, resolution, field)
         println(typeof(a))
         println(typeof(b))
         @test a isa Array{Float64, 3}

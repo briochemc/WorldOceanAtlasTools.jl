@@ -1,18 +1,19 @@
-function citation(tracer; product_year=2018)
+function citation(tracer::String ; product_year=2018)
     yr_str = my_product_year(product_year)
     @match my_varname(tracer) begin
         "DSi" || "DIP" || "DIN" => citation_Nutrients(yr_str)
         "Temp" => citation_Temperature(yr_str)
         "Salt" => citation_Salinity(yr_str)
         "O2" || "O2sat" || "AOU" => citation_Oxygen(yr_str)
-        "Dens" || "Cond" => citation(yr_str)
+        "Dens" || "Cond" => citation(product_year)
         _ => error("Not sure what you are trying to cite.")
     end
 end
 
-citation(product_year) = @match my_product_year(product_year) begin
+citation(product_year::Int) = @match my_product_year(product_year) begin
     "13" => "Boyer, T. P. et al. (2013): World Ocean Database 2013, NOAA Atlas NESDIS 72, S. Levitus, Ed., A. Mishonov, Technical Ed.; Silver Spring, MD, 209 pp., doi:10.7289/V5NZ85MT"
     "18" => "Boyer, T. P. et al. (2018): World Ocean Database 2018. A. V. Mishonov, Technical Editor, NOAA Atlas NESDIS 87."
+    "23" => "Reagan, J. R. et al. (2024). World Ocean Atlas 2023. NOAA National Centers for Environmental Information. Dataset: NCEI Accession 0270533."
     _ => "I could not find a citation for WOD$(my_product_year(product_year)). Add it if you know where to find it!"
 end
 

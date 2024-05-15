@@ -183,7 +183,7 @@ my_field_type_code(field) = @match lowercase(field) begin
     "mn" || "mean" || "statistical mean"        => "mn"
     "sd" || "std"  || "standard deviation"      => "sd"
     "dd" || "number of observations"            => "dd"
-    _ => error(incorrect_varfunc(field))
+    _ => error(incorrect_field_type_code(field))
 end
 
 #============================================================

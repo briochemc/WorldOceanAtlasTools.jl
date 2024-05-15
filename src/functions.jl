@@ -16,7 +16,7 @@ Note that WOA's nomenclature should work too, e.g.,
 function get_3D_field(tracer; product_year=2018, period=0, resolution=1, field="an")
     println("Getting the 3D field of WOA$(my_product_year(product_year)) $(my_averaging_period(period)) $(WOA_path_varname(tracer)) $(surface_grid_size(resolution)) data")
     ds = WOA_Dataset(tracer; product_year, period, resolution)
-    field3D = ds[WOA_varname(tracer, field)][:][:, :, :, 1]
+    field3D = ds[WOA_varname(tracer, field)][:, :, :, 1]
     println("  Rearranging data")
     field3D = permutedims(field3D, [2 1 3])
     return field3D
@@ -24,7 +24,7 @@ end
 
 function get_gridded_3D_field(ds, tracer, field)
     println("  Reading NetCDF file")
-    field3D = ds[WOA_varname(tracer, field)][:][:, :, :, 1]
+    field3D = ds[WOA_varname(tracer, field)][:, :, :, 1]
     lon   = ds["lon"][:]   .|> Float64
     lat   = ds["lat"][:]   .|> Float64
     depth = ds["depth"][:] .|> Float64
@@ -55,9 +55,9 @@ function mean_std_and_number_obs(ds, tracer)
     lon   = mod.(ds["lon"][:] .|> Float64, 360)
     lat   = ds["lat"][:]   .|> Float64
     depth = ds["depth"][:] .|> Float64
-    μ3D    = ds[WOA_varname(tracer, "mn")][:][:, :, :, 1]
-    σ3D    = ds[WOA_varname(tracer, "sd")][:][:, :, :, 1]
-    nobs3D = ds[WOA_varname(tracer, "dd")][:][:, :, :, 1]
+    μ3D    = ds[WOA_varname(tracer, "mn")][:, :, :, 1]
+    σ3D    = ds[WOA_varname(tracer, "sd")][:, :, :, 1]
+    nobs3D = ds[WOA_varname(tracer, "dd")][:, :, :, 1]
     println("  Filtering missing data")
     CI = findall(@. !ismissing(μ3D) & !ismissing(nobs3D) & !iszero(nobs3D))
     lon1D   = lon[map(x -> x.I[1], CI)]

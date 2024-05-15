@@ -200,7 +200,7 @@ end
 function indices_and_var(ds::Dataset, tracer::String)
     var = ds[WOA_varname(tracer, "mn")]
     FV = _fillvalue(var)
-    v = var.var[:][:,:,:,1]
+    v = var.var[:,:,:,1]
     ikeep = findall(v .≠ FV)
     return var, v, ikeep
 end

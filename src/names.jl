@@ -200,7 +200,7 @@ You need to edit the `myresolution` function to add more!
 WOA_path_resolution(resolution; product_year=2018) = @match my_resolution(resolution) begin
     "0.25°" => "0.25"
     "1°"    => "1.00"
-    "5°"    => (product_year<2023 ? "5deg" : "5.00")
+    "5°"    => (product_year < 2023 ? "5deg" : "5.00")
 end
 WOA_filename_resolution(resolution) = @match my_resolution(resolution) begin
     "0.25°" => "04"
@@ -269,12 +269,12 @@ url_WOA(tracer; product_year=2018, period=0, resolution=1) = string("https://www
                                    url_DATA(product_year), "/",
                                    WOA_path_varname(tracer), "/netcdf/",
                                    WOA_decade(tracer), "/",
-                                   WOA_path_resolution(resolution,product_year=product_year), "/",
-                                   WOA_NetCDF_filename(tracer; product_year=product_year, period, resolution))
+                                   WOA_path_resolution(resolution; product_year), "/",
+                                   WOA_NetCDF_filename(tracer; product_year, period, resolution))
 url_WOA_THREDDS_23(tracer, period, resolution) = string("https://www.ncei.noaa.gov/thredds-ocean/dodsC/woa23/DATA/",
                                         WOA_path_varname(tracer), "/netcdf/",
                                         WOA_decade(tracer), "/",
-                                        WOA_path_resolution(resolution,product_year=2023), "/",
+                                        WOA_path_resolution(resolution, product_year=2023), "/",
                                         WOA_NetCDF_filename(tracer; product_year=2023, period, resolution))
 url_WOA_THREDDS_18(tracer, period, resolution) = string("https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncei/woa/",
                                         WOA_path_varname(tracer), "/",

@@ -6,13 +6,13 @@
 
 <p>
   <a href="https://github.com/briochemc/WorldOceanAtlasTools.jl/actions">
-    <img src="https://img.shields.io/github/workflow/status/briochemc/WorldOceanAtlasTools.jl/Mac%20OS%20X?label=OSX&logo=Apple&logoColor=white&style=flat-square">
+    <img src="https://img.shields.io/github/actions/workflow/status/briochemc/WorldOceanAtlasTools.jl/mac.yml?label=OSX&logo=Apple&logoColor=white&style=flat-square">
   </a>
   <a href="https://github.com/briochemc/WorldOceanAtlasTools.jl/actions">
-    <img src="https://img.shields.io/github/workflow/status/briochemc/WorldOceanAtlasTools.jl/Linux?label=Linux&logo=Linux&logoColor=white&style=flat-square">
+    <img src="https://img.shields.io/github/actions/workflow/status/briochemc/WorldOceanAtlasTools.jl/linux.yml?label=Linux&logo=Linux&logoColor=white&style=flat-square">
   </a>
   <a href="https://github.com/briochemc/WorldOceanAtlasTools.jl/actions">
-    <img src="https://img.shields.io/github/workflow/status/briochemc/WorldOceanAtlasTools.jl/Windows?label=Windows&logo=Windows&logoColor=white&style=flat-square">
+    <img src="https://img.shields.io/github/actions/workflow/status/briochemc/WorldOceanAtlasTools.jl/windows.yml?label=Windows&logo=Windows&logoColor=white&style=flat-square">
   </a>
   <a href="https://codecov.io/gh/briochemc/WorldOceanAtlasTools.jl">
     <img src="https://img.shields.io/codecov/c/github/briochemc/WorldOceanAtlasTools.jl/master?label=Codecov&logo=codecov&logoColor=white&style=flat-square">
@@ -21,7 +21,7 @@
 
 <p>
   <a href="https://briochemc.github.io/WorldOceanAtlasTools.jl/stable/">
-    <img src="https://img.shields.io/github/workflow/status/briochemc/WorldOceanAtlasTools.jl/Documentation?style=for-the-badge&label=Documentation&logo=Read%20the%20Docs&logoColor=white">
+    <img src="https://img.shields.io/github/actions/workflow/status/briochemc/WorldOceanAtlasTools.jl/docs.yml?style=for-the-badge&label=Documentation&logo=Read%20the%20Docs&logoColor=white">
   </a>
 </p>
 

@@ -1,5 +1,5 @@
 @testset "Citations" begin
-    product_years = [2009, 2013, 2018]
+    product_years = [2009, 2013, 2018, 2023]
     @testset "WOA$(WOA.my_product_year(product_year))" for product_year in product_years
         tracers = ["t", "s", "I", "C", "o", "O", "A", "i", "p", "n"]
         @testset "$(WOA.my_varname(tracer))" for tracer in tracers

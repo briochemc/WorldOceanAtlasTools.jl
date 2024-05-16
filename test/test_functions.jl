@@ -1,7 +1,7 @@
 
 
 @testset "Testing functions" begin
-    product_year = 2018
+    product_year = 2023
     tracer = "p"
     period = 0 # Annual, 1 month and 1 season — no need to test every month and season
     resolution = "5°"

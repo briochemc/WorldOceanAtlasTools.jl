@@ -46,6 +46,7 @@ my_product_year(product_year) = @match product_year begin
     2009 || 09 || "2009" || "09" => "09"
     2013 || 13 || "2013" || "13" => "13"
     2018 || 18 || "2018" || "18" => "18"
+    2023 || 23 || "2023" || "23" => "23"
     _ => error("Cannot register WOA data from year $product_year")
 end
 
@@ -182,7 +183,7 @@ my_field_type_code(field) = @match lowercase(field) begin
     "mn" || "mean" || "statistical mean"        => "mn"
     "sd" || "std"  || "standard deviation"      => "sd"
     "dd" || "number of observations"            => "dd"
-    _ => error(incorrect_varfunc(field))
+    _ => error(incorrect_field_type_code(field))
 end
 
 #============================================================
@@ -196,10 +197,10 @@ Only these resolutions are available:
     - "0.25" for 0.25°×0.25° resolution
 You need to edit the `myresolution` function to add more!
 """
-WOA_path_resolution(resolution) = @match my_resolution(resolution) begin
+WOA_path_resolution(resolution; product_year=2018) = @match my_resolution(resolution) begin
     "0.25°" => "0.25"
     "1°"    => "1.00"
-    "5°"    => "5deg"
+    "5°"    => (product_year < 2023 ? "5deg" : "5.00")
 end
 WOA_filename_resolution(resolution) = @match my_resolution(resolution) begin
     "0.25°" => "04"
@@ -263,18 +264,23 @@ This URL `String` typically looks like
     "https://data.nodc.noaa.gov/woa/WOA13/DATAv2/phosphate/netcdf/all/1.00/woa13_all_p00_01.nc"
     ```
 """
-url_WOA(tracer; product_year=2018, period=0, resolution=1) = string("https://data.nodc.noaa.gov/woa/WOA",
+url_WOA(tracer; product_year=2018, period=0, resolution=1) = string("https://www.ncei.noaa.gov/data/oceans/woa/WOA",
                                    my_product_year(product_year), "/",
                                    url_DATA(product_year), "/",
                                    WOA_path_varname(tracer), "/netcdf/",
                                    WOA_decade(tracer), "/",
-                                   WOA_path_resolution(resolution), "/",
+                                   WOA_path_resolution(resolution; product_year), "/",
                                    WOA_NetCDF_filename(tracer; product_year, period, resolution))
-url_WOA_THREDDS_18(tracer, period, resolution) = string("https://data.nodc.noaa.gov/thredds/dodsC/ncei/woa/",
+url_WOA_THREDDS_23(tracer, period, resolution) = string("https://www.ncei.noaa.gov/thredds-ocean/dodsC/woa23/DATA/",
+                                        WOA_path_varname(tracer), "/netcdf/",
+                                        WOA_decade(tracer), "/",
+                                        WOA_path_resolution(resolution, product_year=2023), "/",
+                                        WOA_NetCDF_filename(tracer; product_year=2023, period, resolution))
+url_WOA_THREDDS_18(tracer, period, resolution) = string("https://www.ncei.noaa.gov/thredds-ocean/dodsC/ncei/woa/",
                                         WOA_path_varname(tracer), "/",
                                         WOA_decade(tracer), "/",
                                         WOA_path_resolution(resolution), "/",
-                                        WOA_NetCDF_filename(2018, tracer, period, resolution))
+                                        WOA_NetCDF_filename(tracer; product_year=2018, period, resolution))
 url_WOA_THREDDS_09(tracer, period, resolution) = string("https://data.nodc.noaa.gov/thredds/dodsC/woa09/",
                                         WOA_path_varname(tracer), "_",
                                         seasonal_annual_monthly(period), "_",
@@ -282,15 +288,15 @@ url_WOA_THREDDS_09(tracer, period, resolution) = string("https://data.nodc.noaa.
 url_WOA_THREDDS(tracer; product_year=2018, period=0, resolution=1) = @match my_product_year(product_year) begin
     "18" => url_WOA_THREDDS_18(tracer, period, resolution)
     "09" => url_WOA_THREDDS_09(tracer, period, resolution)
+    "23" => url_WOA_THREDDS_23(tracer, period, resolution)
     _ => "No THREDDS links for year $product_year"
 end
 url_DATA(product_year) = @match my_product_year(product_year) begin
     "09" => "DATA"
     "13" => "DATAv2"
     "18" => "DATA"
+    "23" => "DATA"
 end
-
-
 
 """
     varname(tracer)

@@ -18,6 +18,7 @@ Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 [compat]
 DataDeps = "0.7"
 DataFrames = "1"
+Downloads = "1"
 Match = "2"
 NCDatasets = "0.14"
 NearestNeighbors = "0.4"

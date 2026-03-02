@@ -1,5 +1,16 @@
 
 
+@testset "NetCDF filename v2 suffix" begin
+    # WOA13 salinity files have a "v2" suffix
+    @test WOA.WOA_NetCDF_filename("s"; product_year=2013, period=0, resolution=1) == "woa13_decav_s00_01v2.nc"
+    # WOA18 and WOA23 salinity files do not
+    @test WOA.WOA_NetCDF_filename("s"; product_year=2018, period=0, resolution=1) == "woa18_decav_s00_01.nc"
+    @test WOA.WOA_NetCDF_filename("s"; product_year=2023, period=0, resolution=1) == "woa23_decav_s00_01.nc"
+    # Temperature never has the v2 suffix
+    @test WOA.WOA_NetCDF_filename("t"; product_year=2013, period=0, resolution=1) == "woa13_decav_t00_01.nc"
+    @test WOA.WOA_NetCDF_filename("t"; product_year=2023, period=0, resolution=1) == "woa23_decav_t00_01.nc"
+end
+
 @testset "Testing functions" begin
     product_year = 2023
     tracer = "p"

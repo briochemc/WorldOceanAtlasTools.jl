@@ -233,8 +233,8 @@ WOA_decade(tracer) = @match my_varname(tracer) begin
     _ => error(incorrect_varname(tracer))
 end
 
-WOA_v2(tracer) = @match my_varname(tracer) begin
-    "Salt" => "v2"
+WOA_v2(tracer; product_year=2018) = @match my_varname(tracer) begin
+    "Salt" => my_product_year(product_year) == "13" ? "v2" : ""
     "Dens" || "Temp" || "Cond" || "O2" || "O2sat" || "AOU" || "DSi" || "DIP" || "DIN" => ""
     _ => error(incorrect_varname(tracer))
 end
@@ -249,7 +249,7 @@ function WOA_NetCDF_filename(tracer; product_year=2018, period=0, resolution=1)
                   WOA_filename_varname(tracer),
                   WOA_averaging_period(period), "_",
                   WOA_filename_resolution(resolution),
-                  WOA_v2(tracer), ".nc")
+                  WOA_v2(tracer; product_year), ".nc")
 end
 
 #============================================================

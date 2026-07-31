@@ -1,6 +1,6 @@
 name = "WorldOceanAtlasTools"
 uuid = "04f20302-f1b9-11e8-29d9-7d841cb0a64a"
-version = "0.6.4"
+version = "0.6.5"
 authors = ["Benoit Pasquier <briochemc@gmail.com>"]
 
 [deps]

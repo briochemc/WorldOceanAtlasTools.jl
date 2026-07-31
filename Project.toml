@@ -1,7 +1,7 @@
 name = "WorldOceanAtlasTools"
 uuid = "04f20302-f1b9-11e8-29d9-7d841cb0a64a"
-authors = ["Benoit Pasquier <briochemc@gmail.com>"]
 version = "0.6.4"
+authors = ["Benoit Pasquier <briochemc@gmail.com>"]
 
 [deps]
 DataDeps = "124859b0-ceae-595e-8997-d05f6a7a8dfe"
@@ -16,7 +16,7 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
-DataDeps = "0.7"
+DataDeps = "0.7, 1"
 DataFrames = "1"
 Downloads = "1"
 Match = "2"
